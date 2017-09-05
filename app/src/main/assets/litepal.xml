@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<litepal>
+    <dbname value="raspIot"></dbname>
+    <version value="1"> </version>
+    <list>
+        <mapping class="org.raspiot.raspIot.databaseGlobal.RoomDB"></mapping>
+        <mapping class="org.raspiot.raspIot.databaseGlobal.DeviceDB"></mapping>
+        <mapping class="org.raspiot.raspIot.databaseGlobal.DeviceContentDB"></mapping>
+
+        <mapping class="org.raspiot.raspIot.databaseGlobal.HostAddrDB"></mapping>
+    </list>
+</litepal>

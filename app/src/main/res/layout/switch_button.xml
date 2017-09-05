@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.kyleduo.switchbutton.SwitchButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SwitchButtonStyle"
+    android:checked="false"
+    app:kswAnimationDuration="300"
+    app:kswBackDrawable="@drawable/ios_back_drawable"
+    app:kswThumbDrawable="@drawable/ios_thumb_selector"
+    app:kswBackMeasureRatio="1.7"
+    app:kswThumbMarginBottom="-8dp"
+    app:kswThumbMarginLeft="-6dp"
+    app:kswThumbMarginRight="-8dp"
+    app:kswThumbMarginTop="-5dp"
+    app:kswThumbWidth="20dp"
+    app:kswThumbHeight="20dp"/>
