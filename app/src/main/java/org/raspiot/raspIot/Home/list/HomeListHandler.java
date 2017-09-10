@@ -1,9 +1,6 @@
 package org.raspiot.raspIot.Home.list;
 
 import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.Room.RoomActivity;
-import org.raspiot.raspIot.Room.json.RoomJSON;
-import org.raspiot.raspIot.Room.list.DeviceAdapter;
 import org.raspiot.raspIot.databaseGlobal.RoomDB;
 import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
 import org.raspiot.raspIot.networkGlobal.TCPClient;

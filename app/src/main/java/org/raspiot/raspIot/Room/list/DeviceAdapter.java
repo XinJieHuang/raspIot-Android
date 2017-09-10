@@ -1,6 +1,7 @@
 package org.raspiot.raspIot.Room.list;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,12 @@ import com.bumptech.glide.Glide;
 import com.kyleduo.switchbutton.SwitchButton;
 
 import org.raspiot.raspIot.R;
+import org.raspiot.raspIot.UICommonOperations.ToastShow;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.raspiot.raspIot.Room.RoomListHandler.setDeviceContentToValue;
 
 /**
  * Created by asus on 2017/7/31.
@@ -32,11 +36,13 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     static class GroupItemViewHolder extends RecyclerView.ViewHolder{
         ImageView deviceImage;
         TextView deviceName;
+        TextView deviceStatus;
 
         public GroupItemViewHolder(View view){
             super(view);
             deviceImage = (ImageView) view.findViewById(R.id.device_image);
             deviceName = (TextView) view.findViewById(R.id.device_name);
+            deviceStatus = (TextView) view.findViewById(R.id.device_status);
         }
     }
 
@@ -131,12 +137,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         /**********************************************************************************/
         if(itemStatus.getViewType() == ItemStatus.VIEW_TYPE_GROUPITEM){
             final GroupItemViewHolder groupItemViewHolder = (GroupItemViewHolder) viewHolder;
-
+            /* setter */
             groupItemViewHolder.deviceName.setText(device.getGroupItem().getName());
             Glide.with(mContext)
                     .load(device.getGroupItem().getImageId())
                     .into(groupItemViewHolder.deviceImage);
+            String status = device.getGroupItem().getStatus();
+            groupItemViewHolder.deviceStatus.setText(status);
 
+            /* OnClickListener */
             groupItemViewHolder.itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
@@ -180,13 +189,29 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 subItemViewHolder.deviceContentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
-                        if(isChecked) {
-                            deviceContent.setValue("true");
-                            Toast.makeText(mContext, "Checked", Toast.LENGTH_SHORT).show();
+                        if(device.getGroupItem().getStatus().equals("offline")) {
+                            subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
+                            ToastShow.ToastShowInBottom("Device offline.");
                         }
                         else {
-                            deviceContent.setValue("false");
-                            Toast.makeText(mContext, "unChecked", Toast.LENGTH_SHORT).show();
+                            boolean TrueOrFalse;
+                            if (isChecked) {
+                                TrueOrFalse =setDeviceContentToValue(device.getGroupItem().getName(), deviceContent.getName(), "true");
+                                if (TrueOrFalse == true) {
+                                    deviceContent.setValue("true");
+                                    ToastShow.ToastShowInBottom(deviceContent.getName() + " turn on.");
+                                }
+                            } else {
+                                TrueOrFalse = setDeviceContentToValue(device.getGroupItem().getName(), deviceContent.getName(), "false");
+                                if (TrueOrFalse == true) {
+                                    deviceContent.setValue("false");
+                                    ToastShow.ToastShowInBottom(deviceContent.getName() + " turn off.");
+                                }
+                            }
+                            if(TrueOrFalse == false){
+                                    subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
+                                    ToastShow.ToastShowInBottom("Cmd failed.");
+                            }
                         }
                     }
                 });

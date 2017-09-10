@@ -31,11 +31,11 @@ public class RoomDatabaseHandler {
                     .findFirst(RoomDB.class)
                     .getDevices();                 //获取该房间的设备List
         }catch (NullPointerException e){
-            deviceDBList = new ArrayList<>();
+            return;
         }
 
         for(DeviceDB deviceDB : deviceDBList){
-            DeviceTitle deviceTitle = new DeviceTitle(deviceDB.getName(), R.drawable.item_image);
+            DeviceTitle deviceTitle = new DeviceTitle(deviceDB.getName(), R.drawable.item_image, deviceDB.getStatus());
             List<DeviceContentDB> deviceContentDBList = deviceDB.getDeviceContents();
 
             List<DeviceContent> deviceContentList = new ArrayList<>();
@@ -81,25 +81,32 @@ public class RoomDatabaseHandler {
             DeviceDB deviceDB = new DeviceDB();
             deviceDB.setName(deviceJSON.getName());
             deviceDB.setUuid(deviceJSON.getUuid());
+            deviceDB.setStatus(deviceJSON.getStatus());
             deviceDB.setId(0);
             if((deviceDBCheck = DataSupport.where("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId())).findFirst(DeviceDB.class)) != null) {
                 deviceDB.setId(deviceDBCheck.getId());
             }
-
-            /*%%%%%%%%%%%%%%%%%%%%%%%%DeviceContent List%%%%%%%%%%%%%%%%%%%%%%%%%*/
-            List<DeviceContentJSON> deviceContentJSONList = deviceJSON.getDeviceContent();
-            List<DeviceContentDB> deviceContentDBList = new ArrayList<>();
-            for(DeviceContentJSON deviceContentJSON : deviceContentJSONList){
-                DeviceContentDB deviceContentDB = new DeviceContentDB();
-                deviceContentDB.setType(deviceContentJSON.getType());
-                deviceContentDB.setName(deviceContentJSON.getName());
-                deviceContentDB.setValue(deviceContentJSON.getValue());
-                deviceContentDB.saveOrUpdate("name = ? and devicedb_id = ?", deviceContentDB.getName(), Integer.toString(deviceDB.getId()));
-                deviceContentDBList.add(deviceContentDB);
+            /* if device's status is false, means couldn't get deviceContent from iotServer*/
+            if(deviceDB.getStatus() == true) {
+                /*%%%%%%%%%%%%%%%%%%%%%%%%DeviceContent List%%%%%%%%%%%%%%%%%%%%%%%%%*/
+                List<DeviceContentJSON> deviceContentJSONList = deviceJSON.getDeviceContent();
+                List<DeviceContentDB> deviceContentDBList = new ArrayList<>();
+                for (DeviceContentJSON deviceContentJSON : deviceContentJSONList) {
+                    DeviceContentDB deviceContentDB = new DeviceContentDB();
+                    deviceContentDB.setType(deviceContentJSON.getType());
+                    deviceContentDB.setName(deviceContentJSON.getName());
+                    deviceContentDB.setValue(deviceContentJSON.getValue());
+                    deviceContentDB.saveOrUpdate("name = ? and devicedb_id = ?", deviceContentDB.getName(), Integer.toString(deviceDB.getId()));
+                    deviceContentDBList.add(deviceContentDB);
+                }
+                /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+                deviceDB.setDeviceContentDBList(deviceContentDBList);
+                deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
             }
-            /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-            deviceDB.setDeviceContentDBList(deviceContentDBList);
-            deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
+            else{
+                deviceDB.setToDefault("status");
+                deviceDB.update(deviceDB.getId());
+            }
             deviceDBList.add(deviceDB);
         }
         /*############################All Device#################################*/

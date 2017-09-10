@@ -3,10 +3,12 @@ package org.raspiot.raspIot.Room.list;
 public class DeviceTitle {
     private String name;
     private int imageId;
+    private String status;
 
-    public DeviceTitle(String name, int imageId){
+    public DeviceTitle(String name, int imageId, boolean status){
         this.name = name;
         this.imageId = imageId;
+        setStatus(status);
     }
 
     public  String getName(){
@@ -15,6 +17,17 @@ public class DeviceTitle {
 
     public int getImageId(){
         return imageId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        if(status == true)
+            this.status = "online";
+        else if(status == false)
+            this.status = "offline";
     }
 
     public boolean equals(Object o){

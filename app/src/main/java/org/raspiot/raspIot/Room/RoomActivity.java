@@ -52,6 +52,8 @@ public class RoomActivity extends AppCompatActivity {
     private String dataFromNetworkResponse;
 
     protected static String roomName;
+    private final int ADD_DEVICE_SUCCEED = 2;
+    private final int ADD_DEVICE_ERROR = 3;
     private final int GET_DEVICE_LIST_SUCCEED = 1;
     private final int GET_DEVICE_LIST_ERROR = -1;
 
@@ -72,7 +74,8 @@ public class RoomActivity extends AppCompatActivity {
     //Toolbar右上角菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
+        if(!roomName.equals("Unauthorized devices"))
+            getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
         return true;
     }
 
@@ -83,7 +86,7 @@ public class RoomActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.room_add_device:
-                ControlMessageJSON getDeviceListCmd = new ControlMessageJSON("add", "device:"+roomName, "DS18B20");
+                ControlMessageJSON getDeviceListCmd = new ControlMessageJSON("add", "device:"+roomName+"/Smart light", "5c:cf:7f:14:73:a7");
                 sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(getDeviceListCmd));
                 break;
             default:
@@ -112,7 +115,15 @@ public class RoomActivity extends AppCompatActivity {
 
                 case GET_DEVICE_LIST_ERROR:
                     swipeRefresh.setRefreshing(false);
-                    ToastShowInBottom("Something error.");
+                    ToastShowInBottom("Refresh error.");
+                    break;
+
+                case ADD_DEVICE_SUCCEED:
+                    ToastShowInBottom("Add device succeed.\nWaiting for device access in.");
+                    break;
+
+                case ADD_DEVICE_ERROR:
+                    ToastShowInBottom("Device already exists");
                     break;
 
                 default:
@@ -236,8 +247,14 @@ public class RoomActivity extends AppCompatActivity {
     private void onNetworkResponse(String response){
         Message message = new Message();
         if(!response.equals("")) {
-            dataFromNetworkResponse = response;
-            message.what = GET_DEVICE_LIST_SUCCEED;
+            if(response.equals("Add device succeed."))
+                message.what = ADD_DEVICE_SUCCEED;
+            else if(response.equals("Device already exists"))
+                message.what = ADD_DEVICE_ERROR;
+            else if(response.length() > 40){
+                dataFromNetworkResponse = response;
+                message.what = GET_DEVICE_LIST_SUCCEED;
+            }
             handler.sendMessage(message);
         }else{
             onNetworkError();
