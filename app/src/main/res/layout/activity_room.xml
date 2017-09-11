@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/content_room" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

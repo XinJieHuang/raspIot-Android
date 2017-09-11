@@ -1,5 +1,6 @@
 package org.raspiot.raspIot.Room;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.raspiot.raspIot.DeviceAdder.DeviceAdderActivity;
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
 import org.raspiot.raspIot.Room.json.RoomJSON;
@@ -31,13 +33,13 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static org.raspiot.raspIot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspIot.Room.RoomDatabaseHandler.getDeviceDataFromDatabase;
 import static org.raspiot.raspIot.Room.RoomDatabaseHandler.getLastUpdateTimeFromDatabase;
 import static org.raspiot.raspIot.Room.RoomDatabaseHandler.parseDeviceDataAndSaveToDatabase;
 import static org.raspiot.raspIot.Room.RoomJSONHandler.parseJSONWithGSON;
 import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
@@ -52,8 +54,6 @@ public class RoomActivity extends AppCompatActivity {
     private String dataFromNetworkResponse;
 
     protected static String roomName;
-    private final int ADD_DEVICE_SUCCEED = 2;
-    private final int ADD_DEVICE_ERROR = 3;
     private final int GET_DEVICE_LIST_SUCCEED = 1;
     private final int GET_DEVICE_LIST_ERROR = -1;
 
@@ -86,8 +86,9 @@ public class RoomActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.room_add_device:
-                ControlMessageJSON getDeviceListCmd = new ControlMessageJSON("add", "device:"+roomName+"/Smart light", "5c:cf:7f:14:73:a7");
-                sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(getDeviceListCmd));
+                Intent intent_deviceAdder= new Intent(RoomActivity.this, DeviceAdderActivity.class);
+                intent_deviceAdder.putExtra(ROOM_NAME, roomName);
+                startActivity(intent_deviceAdder);
                 break;
             default:
         }
@@ -116,14 +117,6 @@ public class RoomActivity extends AppCompatActivity {
                 case GET_DEVICE_LIST_ERROR:
                     swipeRefresh.setRefreshing(false);
                     ToastShowInBottom("Refresh error.");
-                    break;
-
-                case ADD_DEVICE_SUCCEED:
-                    ToastShowInBottom("Add device succeed.\nWaiting for device access in.");
-                    break;
-
-                case ADD_DEVICE_ERROR:
-                    ToastShowInBottom("Device already exists");
                     break;
 
                 default:
@@ -247,11 +240,7 @@ public class RoomActivity extends AppCompatActivity {
     private void onNetworkResponse(String response){
         Message message = new Message();
         if(!response.equals("")) {
-            if(response.equals("Add device succeed."))
-                message.what = ADD_DEVICE_SUCCEED;
-            else if(response.equals("Device already exists"))
-                message.what = ADD_DEVICE_ERROR;
-            else if(response.length() > 40){
+            if(response.length() > 40){
                 dataFromNetworkResponse = response;
                 message.what = GET_DEVICE_LIST_SUCCEED;
             }

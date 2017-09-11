@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
     private RoomAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
-    private static final int SOMETHING_ERROR = -1;
+    private static final int NETWORK_ERROR = -1;
     private static final int GET_ROOM_LIST_SUCCEED = 1;
     private static final int CMD_ERROR = 2;
 
@@ -126,9 +126,9 @@ public class HomeActivity extends AppCompatActivity {
                     ToastShow.ToastShowInBottom("Refresh finish.");
                     break;
 
-                case SOMETHING_ERROR:
+                case NETWORK_ERROR:
                     swipeRefresh.setRefreshing(false);
-                    ToastShow.ToastShowInBottom("Something error.");
+                    ToastShow.ToastShowInBottom("Network error.");
                     break;
 
                 case CMD_ERROR:
@@ -382,7 +382,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void onNetworkError(){
         Message message = new Message();
-        message.what = SOMETHING_ERROR;
+        message.what = NETWORK_ERROR;
         handler.sendMessage(message);
     }
 

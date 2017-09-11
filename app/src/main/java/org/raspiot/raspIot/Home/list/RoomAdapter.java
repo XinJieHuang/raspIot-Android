@@ -17,6 +17,7 @@ import org.raspiot.raspIot.Room.RoomActivity;
 
 import java.util.List;
 
+import static org.raspiot.raspIot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspIot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspIot.Home.list.HomeListHandler.canRemoveItemOrNot;
 
@@ -59,7 +60,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 int position = holder.getAdapterPosition();
                 Room room = mRoomList.get(position);
                 Intent intent = new Intent(mContext, RoomActivity.class);
-                intent.putExtra(HomeActivity.ROOM_NAME, room.getName());
+                intent.putExtra(ROOM_NAME, room.getName());
                 mContext.startActivity(intent);
             }
         });
