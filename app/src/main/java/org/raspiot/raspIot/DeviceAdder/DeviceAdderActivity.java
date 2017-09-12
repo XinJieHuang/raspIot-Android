@@ -157,7 +157,7 @@ public class DeviceAdderActivity extends AppCompatActivity {
         if(!response.equals("")) {
             if(response.equals("Add device succeed."))
                 message.what = ADD_DEVICE_SUCCEED;
-            else if(response.equals("Device already exists"))
+            else if(response.equals("Device already exists."))
                 message.what = ADD_DEVICE_ERROR;
                 handler.sendMessage(message);
         }else{

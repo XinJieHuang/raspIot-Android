@@ -101,12 +101,10 @@ public class RoomDatabaseHandler {
                 }
                 /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 deviceDB.setDeviceContentDBList(deviceContentDBList);
-                deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
             }
-            else{
+            if(deviceDB.getStatus() == false)   /*LitePal not support set a value to default*/
                 deviceDB.setToDefault("status");
-                deviceDB.update(deviceDB.getId());
-            }
+            deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
             deviceDBList.add(deviceDB);
         }
         /*############################All Device#################################*/
