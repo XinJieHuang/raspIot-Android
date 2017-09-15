@@ -18,7 +18,7 @@ import android.view.View;
 
 import org.raspiot.raspIot.DeviceAdder.DeviceAdderActivity;
 import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.Room.json.RoomJSON;
 import org.raspiot.raspIot.Room.list.Device;
 import org.raspiot.raspIot.Room.list.DeviceAdapter;
@@ -153,11 +153,12 @@ public class RoomActivity extends AppCompatActivity {
 
 
     private void getDeviceListWithNetwork(){
+        ControlMessage getDeviceList = new ControlMessage("get", "device:"+roomName, "devicelist", getLastUpdateTimeFromDatabase());
+        String getDeviceListJson = buildJSON(getDeviceList);
         if(CurrentHostModeIsCloudServerMode())
-            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/"+roomName+"/getdevicelist");
+            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/relay", getDeviceListJson);
         else {
-            ControlMessageJSON getDeviceListCmd = new ControlMessageJSON("get", "device:"+roomName, "devicelist", getLastUpdateTimeFromDatabase());
-            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), buildJSON(getDeviceListCmd));
+            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), getDeviceListJson);
         }
     }
 
@@ -222,8 +223,8 @@ public class RoomActivity extends AppCompatActivity {
 
 
 
-    private void sendRequestWithOkHttp(String addr){
-        HttpUtil.sendOkHttpRequest(addr, new okhttp3.Callback(){
+    private void sendRequestWithOkHttp(String addr, String data){
+        HttpUtil.sendOkHttpRequest(addr, data, new okhttp3.Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //Each letter must correspond

@@ -17,13 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.RaspApplication;
 import org.raspiot.raspIot.UICommonOperations.ToastShow;
 import org.raspiot.raspIot.databaseGlobal.HostAddrDB;
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
 import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
@@ -201,11 +199,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void checkServicesWithNetwork(){
+        ControlMessage checkServices = new ControlMessage("get", "server", "checkServices");
+        String checkServicesJson = buildJSON(checkServices);
         if(switchServerMode.isChecked()) {
-            sendRequestWithOkHttp(HostAddr + "/api/checkServices");
+            sendRequestWithOkHttp(HostAddr + "/api/relay", checkServicesJson);
         }else{
-            ControlMessageJSON checkServicesJson = new ControlMessageJSON("get", "server", "checkServices");
-            sendRequestWithSocket(HostAddr, buildJSON(checkServicesJson));
+            sendRequestWithSocket(HostAddr, checkServicesJson);
         }
     }
 
@@ -257,8 +256,8 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void sendRequestWithOkHttp(String hostAddr){
-        HttpUtil.sendOkHttpRequest(hostAddr, new okhttp3.Callback(){
+    private void sendRequestWithOkHttp(String hostAddr, String data){
+        HttpUtil.sendOkHttpRequest(hostAddr, data, new okhttp3.Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 onNetworkResponse(response.body().string());

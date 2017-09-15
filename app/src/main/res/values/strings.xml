@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">raspIot</string>
+    <string name="app_name">raspiot</string>
 
-    <string name="dummy_content">raspIot</string>
+    <string name="dummy_content">raspiot</string>
     <string name="title_activity_iot_devices">IotDevicesActivity</string>
     <string name="title_activity_add_room">AddRoomActivity</string>
     <string name="action_settings">Settings</string>

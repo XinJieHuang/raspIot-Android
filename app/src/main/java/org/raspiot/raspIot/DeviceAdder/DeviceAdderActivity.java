@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
 import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
@@ -112,13 +112,14 @@ public class DeviceAdderActivity extends AppCompatActivity {
 
 
     private void addDeviceWithNetwork(){
+        String deviceName = editDeviceName.getText().toString();
+        String deviceUuid = editDeviceUuid.getText().toString();
+        ControlMessage addDevice = new ControlMessage("add", "device:"+roomName+"/"+deviceName, deviceUuid);
+        String addDeviceJson = buildJSON(addDevice);
         if(CurrentHostModeIsCloudServerMode()){
-            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/");
+            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/relay", addDeviceJson);
         }else{
-            String deviceName = editDeviceName.getText().toString();
-            String deviceUuid = editDeviceUuid.getText().toString();
-            ControlMessageJSON addDeviceCmd = new ControlMessageJSON("add", "device:"+roomName+"/"+deviceName, deviceUuid);
-            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), buildJSON(addDeviceCmd));
+            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), addDeviceJson);
         }
     }
 
@@ -138,8 +139,8 @@ public class DeviceAdderActivity extends AppCompatActivity {
         });
     }
 
-    private void sendRequestWithOkHttp(String hostAddr){
-        HttpUtil.sendOkHttpRequest(hostAddr, new okhttp3.Callback(){
+    private void sendRequestWithOkHttp(String hostAddr, String data){
+        HttpUtil.sendOkHttpRequest(hostAddr, data, new okhttp3.Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 onNetworkResponse(response.body().string());

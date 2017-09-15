@@ -1,6 +1,6 @@
 package org.raspiot.raspIot.Room;
 
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
 import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
 
@@ -17,7 +17,7 @@ public class RoomListHandler {
     private static boolean TrueOrFale;
     public static boolean setDeviceContentToValue(String deviceName, String deviceContentName, String newValue){
         String target = "deviceContent:" + roomName + "/" + deviceName + "/" + deviceContentName;
-        ControlMessageJSON setDeviceContentToNewValue = new ControlMessageJSON("set", target, newValue);
+        ControlMessage setDeviceContentToNewValue = new ControlMessage("set", target, newValue);
 
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];

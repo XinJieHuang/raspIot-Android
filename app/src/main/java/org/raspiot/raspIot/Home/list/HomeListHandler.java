@@ -2,7 +2,7 @@ package org.raspiot.raspIot.Home.list;
 
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.databaseGlobal.RoomDB;
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
 import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
 
@@ -68,7 +68,7 @@ public class HomeListHandler {
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
-        ControlMessageJSON deleteRoomCmd = new ControlMessageJSON("del", "room", roomName);
+        ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
         String data = buildJSON(deleteRoomCmd);
         TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
             @Override

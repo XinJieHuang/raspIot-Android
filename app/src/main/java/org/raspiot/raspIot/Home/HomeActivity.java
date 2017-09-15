@@ -30,7 +30,7 @@ import org.raspiot.raspIot.UICommonOperations.ToastShow;
 import org.raspiot.raspIot.databaseGlobal.RoomDB;
 import org.raspiot.raspIot.Home.list.Room;
 import org.raspiot.raspIot.Home.list.RoomAdapter;
-import org.raspiot.raspIot.jsonGlobal.ControlMessageJSON;
+import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
 import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
@@ -164,11 +164,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void getRoomListWithNetwork(){
+        ControlMessage getRoomList = new ControlMessage("get", "room", "roomlist");
+        String getRoomListJson = buildJSON(getRoomList);
         if(CurrentHostModeIsCloudServerMode())
-            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/getroomlist");
+            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/relay", getRoomListJson);
         else {
-            ControlMessageJSON controlMessageJSON = new ControlMessageJSON("get", "room", "roomlist");
-            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), buildJSON(controlMessageJSON));
+            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), getRoomListJson);
         }
     }
 
@@ -195,8 +196,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initToolbar(){
         Toolbar toolBar = (Toolbar) findViewById(R.id.home_toolbar);
-        toolBar.setTitle("❤ house");
-        toolBar.setSubtitle("raspIot is fantastic");
+        toolBar.setTitle("Smart house");
+        toolBar.setSubtitle("raspiot is fantastic");
         toolBar.setNavigationIcon(R.drawable.toolbar_icon_raspiot);
         setSupportActionBar(toolBar);
 
@@ -300,7 +301,7 @@ public class HomeActivity extends AppCompatActivity {
                         roomName = "new room " + i;
                     }
                 }
-                ControlMessageJSON addNewRoomCmd = new ControlMessageJSON("add", "room", newRoomName.getText().toString());
+                ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
                 sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(addNewRoomCmd));
             }
         });
@@ -352,8 +353,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void sendRequestWithOkHttp(String addr){
-        HttpUtil.sendOkHttpRequest(addr, new okhttp3.Callback(){
+    private void sendRequestWithOkHttp(String addr, String data){
+        HttpUtil.sendOkHttpRequest(addr, data, new okhttp3.Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 onNetworkResponse(response.body().string());

@@ -4,14 +4,14 @@ package org.raspiot.raspIot.jsonGlobal;
  * Created by asus on 2017/8/24.
  */
 
-public class ControlMessageJSON {
+public class ControlMessage {
     private String cmd;
     private String target;
     private String value;
     private String identity;
     private String updateTime;
 
-    public ControlMessageJSON(String cmd, String target, String value, String updateTime) {
+    public ControlMessage(String cmd, String target, String value, String updateTime) {
         this.cmd = cmd;
         this.target = target;
         this.value = value;
@@ -19,7 +19,7 @@ public class ControlMessageJSON {
         this.updateTime = updateTime;
     }
 
-    public ControlMessageJSON(String cmd, String target, String value) {
+    public ControlMessage(String cmd, String target, String value) {
         this.cmd = cmd;
         this.target = target;
         this.value = value;

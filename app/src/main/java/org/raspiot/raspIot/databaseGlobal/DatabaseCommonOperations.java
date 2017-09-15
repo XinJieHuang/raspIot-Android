@@ -13,7 +13,7 @@ public class DatabaseCommonOperations {
     public static final int RASP_SERVER_ID = 2;
     public static final int CURRENT_SERVER_ID = 3;
     public static final String STANDARD_INITIAL_TIME = "2015-12-17 22:22:00";
-    public static final String DEFAULT_CLOUD_SERVER_ADDR = "www.raspIot.org";
+    public static final String DEFAULT_CLOUD_SERVER_ADDR = "www.raspiot.org";
     public static final String DEFAULT_RASP_SERVER_ADDR = "192.168.17.1:22015";
 
     public static boolean CurrentHostModeIsCloudServerMode(){
