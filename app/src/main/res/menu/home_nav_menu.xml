@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
     <group>
-
         <item
             app:actionLayout="@layout/nav_email_text"
             android:id="@+id/nav_email"
@@ -24,7 +23,5 @@
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/nav_icon_sign_out"
             android:title="Sign out"/>
-
     </group>
-
 </menu>

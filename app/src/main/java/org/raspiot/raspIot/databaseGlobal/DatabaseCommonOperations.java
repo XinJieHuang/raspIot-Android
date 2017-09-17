@@ -57,4 +57,9 @@ public class DatabaseCommonOperations {
 
     }
 
+    public static UserInfoDB getCurrentUserInfo() {
+        UserInfoDB userInfoDB = DataSupport.where("authStatus = ?", "1").findFirst(UserInfoDB.class);
+        return userInfoDB;
+    }
+
 }

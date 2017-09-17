@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".RaspApplication"
         android:allowBackup="true"
@@ -35,7 +40,10 @@
         <activity
             android:name=".DeviceAdder.DeviceAdderActivity"
             android:label="@string/title_activity_device_adder"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Auth.LoginActivity"
+            android:label="@string/title_activity_login"></activity>
     </application>
 
 </manifest>

@@ -34,6 +34,7 @@ import com.kyleduo.switchbutton.SwitchButton;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInCenter;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
@@ -54,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button confirmHostAddr;
     private EditText inputHostAddr;
     private SwitchButton switchServerMode;
+    private String dataFromNetworkResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
 
                 case HOST_ERROR:
-                    ToastShow.ToastShowInCenter("This host couldn't provide service,\n please check!");
+                    ToastShowInCenter(dataFromNetworkResponse);
                     inputHostAddr.selectAll();
                     showSoftInputMethod(inputHostAddr);
                     break;
@@ -138,10 +140,10 @@ public class SettingsActivity extends AppCompatActivity {
                 /* Give a friendly message to the user */
                 if(isChecked) {
                     inputHostAddr.setHint("Default:"+DEFAULT_CLOUD_SERVER_ADDR);
-                    ToastShow.ToastShowInCenter("Please input Cloud server address");
+                    ToastShowInCenter("Please input Cloud server address");
                 }else {
                     inputHostAddr.setHint("Default:"+DEFAULT_RASP_SERVER_ADDR);
-                    ToastShow.ToastShowInCenter("Please input Rasp server address");
+                    ToastShowInCenter("Please input Rasp server address");
                 }
                 /* setFocus to EditText, enhance user experience */
                 inputHostAddr.requestFocus();
@@ -272,10 +274,16 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void onNetworkResponse(String response){
         Message message = new Message();
-        if(response.equals("Server is ready")){
-            message.what = HOST_CONFIRM;
-            handler.sendMessage(message);
+        if(!response.equals("")) {
+            if (response.equals("Server is ready")) {
+                message.what = HOST_CONFIRM;
+                handler.sendMessage(message);
+            } else {
+                dataFromNetworkResponse = response;
+                onNetworkError();
+            }
         }else{
+            dataFromNetworkResponse = "This host couldn't provide service,\n please check!";
             onNetworkError();
         }
     }

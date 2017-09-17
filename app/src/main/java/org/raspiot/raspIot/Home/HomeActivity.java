@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
+import org.raspiot.raspIot.Auth.LoginActivity;
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.Room.json.RoomJSON;
 import org.raspiot.raspIot.Settings.SettingsActivity;
@@ -30,6 +31,7 @@ import org.raspiot.raspIot.UICommonOperations.ToastShow;
 import org.raspiot.raspIot.databaseGlobal.RoomDB;
 import org.raspiot.raspIot.Home.list.Room;
 import org.raspiot.raspIot.Home.list.RoomAdapter;
+import org.raspiot.raspIot.databaseGlobal.UserInfoDB;
 import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
 import org.raspiot.raspIot.networkGlobal.TCPClient;
@@ -49,7 +51,9 @@ import static org.raspiot.raspIot.Home.list.HomeListHandler.updateRoomListAndNot
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.initHostAddrDatabase;
 import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
@@ -58,6 +62,7 @@ import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
 public class HomeActivity extends AppCompatActivity {
 
     private long exitTime = 0;
+    private UserInfoDB userInfo;
     private String dataFromNetworkResponse;
     private DrawerLayout mDrawerLayout;
     private List<Room> roomList = new ArrayList<>();
@@ -74,9 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /*App start page*/
-        startPage();
-        initHostAddrDatabase();
+        initApp();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -174,6 +177,22 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /*********************Initialize  start*****************************/
+    private void initApp(){
+        /*App start page*/
+        startPage();
+        initHostAddrDatabase();
+        userInfo = getCurrentUserInfo();
+        if(userInfo == null){
+            if (CurrentHostModeIsCloudServerMode() && getHostAddrFromDatabase(CLOUD_SERVER_ID).equals(DEFAULT_CLOUD_SERVER_ADDR)){
+                    Intent intent_login= new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(intent_login);
+            }else {
+                userInfo.setName("raspiot");
+            }
+        }
+    }
+
+
     private void initRecyclerView(){
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rooms_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -234,7 +253,7 @@ public class HomeActivity extends AppCompatActivity {
         //navigationView 动态设置 条目 小标题
         LinearLayout navEmail = (LinearLayout) navView.getMenu().findItem(R.id.nav_email).getActionView();
         TextView email= (TextView) navEmail.findViewById(R.id.nav_email_text);
-        String userEmail="xjhuang@s-an.org";
+        String userEmail = "xjhuang";
         email.setText(userEmail);
 
         //左侧NavigationView 菜单
@@ -371,10 +390,11 @@ public class HomeActivity extends AppCompatActivity {
         Message message = new Message();
         if(!response.equals("")) {
             dataFromNetworkResponse = response;
-            if(response.equals("Room already exists.") || response.equals("Room not exists."))
-                message.what = CMD_ERROR;
-            else
+            if(response.length() > 40){
                 message.what = GET_ROOM_LIST_SUCCEED;
+            }else {
+                message.what = CMD_ERROR;
+            }
             handler.sendMessage(message);
         }else{
             onNetworkError();

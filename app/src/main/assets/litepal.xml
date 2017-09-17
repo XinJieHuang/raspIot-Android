@@ -8,5 +8,6 @@
         <mapping class="org.raspiot.raspIot.databaseGlobal.DeviceContentDB"></mapping>
 
         <mapping class="org.raspiot.raspIot.databaseGlobal.HostAddrDB"></mapping>
+        <mapping class="org.raspiot.raspIot.databaseGlobal.UserInfoDB"></mapping>
     </list>
 </litepal>
