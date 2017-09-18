@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.RaspApplication;
-import org.raspiot.raspIot.UICommonOperations.ToastShow;
 import org.raspiot.raspIot.databaseGlobal.HostAddrDB;
 import org.raspiot.raspIot.jsonGlobal.ControlMessage;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
@@ -100,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
                 case HOST_ERROR:
                     ToastShowInCenter(dataFromNetworkResponse);
                     inputHostAddr.selectAll();
-                    showSoftInputMethod(inputHostAddr);
+                    showKeyboard(inputHostAddr);
                     break;
 
                 default:
@@ -149,14 +148,14 @@ public class SettingsActivity extends AppCompatActivity {
                 inputHostAddr.requestFocus();
                 inputHostAddr.setFocusableInTouchMode(true);
                 inputHostAddr.selectAll();
-                showSoftInputMethod(inputHostAddr);
+                showKeyboard(inputHostAddr);
             }
         });
 
         confirmHostAddr.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                hideSoftInputMethod();
+                hideKeyboard();
                     /*get host addr from inputHostAddr*/
                 if(inputHostAddr.getText().toString().equals("")){
                     if(switchServerMode.isChecked()) {
@@ -179,7 +178,7 @@ public class SettingsActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER ) {
                     confirmHostAddr.performClick();   //模拟 press button_confirm
-                    return true;  // if input enter ,  confirm
+                    return true;  // if input enter, confirm
                 }
                 return false;
             }
@@ -231,12 +230,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    public static void showSoftInputMethod(View view){
+    public static void showKeyboard(View view){
         Context context = RaspApplication.getContext();
         ((InputMethodManager)(context.getSystemService(Context.INPUT_METHOD_SERVICE))).showSoftInput(view, 0);
     }
 
-    private void hideSoftInputMethod(){
+    private void hideKeyboard(){
         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
     /****************************************************************************************************************/

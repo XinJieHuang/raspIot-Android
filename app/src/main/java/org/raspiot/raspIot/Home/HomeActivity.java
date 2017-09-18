@@ -23,11 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspIot.Auth.LoginActivity;
+import org.raspiot.raspIot.Auth.LogInActivity;
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.Room.json.RoomJSON;
 import org.raspiot.raspIot.Settings.SettingsActivity;
-import org.raspiot.raspIot.UICommonOperations.ToastShow;
 import org.raspiot.raspIot.databaseGlobal.RoomDB;
 import org.raspiot.raspIot.Home.list.Room;
 import org.raspiot.raspIot.Home.list.RoomAdapter;
@@ -48,6 +47,7 @@ import static org.raspiot.raspIot.Home.HomeDatabaseHandler.getAllRoomDataFromDat
 import static org.raspiot.raspIot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
 import static org.raspiot.raspIot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
 import static org.raspiot.raspIot.Home.list.HomeListHandler.updateRoomListAndNotifyItem;
+import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
@@ -79,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        initApp();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -126,16 +125,17 @@ public class HomeActivity extends AppCompatActivity {
                     parseRoomDataAndSaveToDatabase(roomJSONList);
                     updateRoomListAndNotifyItem(getAllRoomDataFromDatabase(), roomList, adapter);
                     swipeRefresh.setRefreshing(false);
-                    ToastShow.ToastShowInBottom("Refresh finish.");
+                    ToastShowInBottom("Refresh finish.");
+                    break;
+
+
+                case CMD_ERROR:
+                    ToastShowInBottom(dataFromNetworkResponse);
                     break;
 
                 case NETWORK_ERROR:
                     swipeRefresh.setRefreshing(false);
-                    ToastShow.ToastShowInBottom("Network error.");
-                    break;
-
-                case CMD_ERROR:
-                    ToastShow.ToastShowInBottom(dataFromNetworkResponse);
+                    ToastShowInBottom("Network error.");
                     break;
 
                 default:
@@ -177,21 +177,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /*********************Initialize  start*****************************/
-    private void initApp(){
-        /*App start page*/
-        startPage();
-        initHostAddrDatabase();
-        userInfo = getCurrentUserInfo();
-        if(userInfo == null){
-            if (CurrentHostModeIsCloudServerMode() && getHostAddrFromDatabase(CLOUD_SERVER_ID).equals(DEFAULT_CLOUD_SERVER_ADDR)){
-                    Intent intent_login= new Intent(HomeActivity.this, LoginActivity.class);
-                    startActivity(intent_login);
-            }else {
-                userInfo.setName("raspiot");
-            }
-        }
-    }
-
 
     private void initRecyclerView(){
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rooms_recycler_view);
@@ -407,8 +392,4 @@ public class HomeActivity extends AppCompatActivity {
         handler.sendMessage(message);
     }
 
-    private void startPage(){
-        Intent intent = new Intent(HomeActivity.this,FullscreenActivity.class);
-        startActivity(intent);
-    }
 }
