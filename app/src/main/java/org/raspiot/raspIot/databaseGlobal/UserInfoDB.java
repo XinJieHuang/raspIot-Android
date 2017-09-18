@@ -1,13 +1,24 @@
 package org.raspiot.raspIot.databaseGlobal;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by asus on 2017/9/17.
  */
 
-public class UserInfoDB {
+public class UserInfoDB extends DataSupport{
+    private int id;
     private String email;
-    private String name;
+    private String username;
     private boolean authStatus;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;
@@ -17,12 +28,12 @@ public class UserInfoDB {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public boolean getAuthStatus() {
