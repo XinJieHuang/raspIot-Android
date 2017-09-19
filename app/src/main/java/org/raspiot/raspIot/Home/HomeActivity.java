@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static org.raspiot.raspIot.Auth.LocalValidation.isRaspIotCloudMode;
 import static org.raspiot.raspIot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
 import static org.raspiot.raspIot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
 import static org.raspiot.raspIot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
@@ -51,11 +53,9 @@ import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.initHostAddrDatabase;
 import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
 
 
@@ -223,10 +223,17 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void initNavigationView(){
+        userInfo = getCurrentUserInfo();
         //左侧DrawerLayout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navView =(NavigationView)findViewById(R.id.nav_view);
         navView.setItemIconTintList(null);  //菜单图标颜色
+
+        /*
+        ImageView navAvatar = (ImageView) navView.getHeaderView(R.id.nav_avatar);
+        TextView navUsername = (TextView) navView.getHeaderView(R.id.nav_username);
+        navUsername.setText(userInfo.getUsername());
+        */
 
         //navigationView 消息提醒 添加角标
         LinearLayout navMsg = (LinearLayout) navView.getMenu().findItem(R.id.nav_msg).getActionView();
@@ -238,23 +245,31 @@ public class HomeActivity extends AppCompatActivity {
         //navigationView 动态设置 条目 小标题
         LinearLayout navEmail = (LinearLayout) navView.getMenu().findItem(R.id.nav_email).getActionView();
         TextView email= (TextView) navEmail.findViewById(R.id.nav_email_text);
-        String userEmail = "xjhuang";
+        String userEmail = userInfo.getEmail();
         email.setText(userEmail);
 
         //左侧NavigationView 菜单
-
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.nav_msg:
+                        msg.setBackgroundResource(R.drawable.nav_icon_msg_none);
+                        msg.setText("");
+                        break;
+
                     case R.id.nav_settings:
                         mDrawerLayout.closeDrawers();
                         Intent intent_settings= new Intent(HomeActivity.this, SettingsActivity.class);
                         startActivity(intent_settings);
                         break;
-                    case R.id.nav_msg:
-                        msg.setBackgroundResource(R.drawable.nav_icon_msg_none);
-                        msg.setText("");
+
+                    case R.id.nav_log_out:
+                        if(isRaspIotCloudMode()) {
+                            DataSupport.delete(UserInfoDB.class, userInfo.getId());
+                            Intent intent_login = new Intent(HomeActivity.this, LogInActivity.class);
+                            startActivity(intent_login);
+                        }
                         break;
                     default:
                 }

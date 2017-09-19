@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Home;
+package org.raspiot.raspIot.Init;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;

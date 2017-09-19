@@ -42,7 +42,6 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/email_sign_up_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
@@ -101,7 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password_confirm"
-                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeActionLabel="@string/action_sign_up_short"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1" />
@@ -124,7 +123,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/to_sign_in_button"
+                android:id="@+id/to_log_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"

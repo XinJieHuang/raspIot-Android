@@ -1,6 +1,7 @@
 package org.raspiot.raspIot.Settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.raspiot.raspIot.Auth.LogInActivity;
+import org.raspiot.raspIot.Home.HomeActivity;
+import org.raspiot.raspIot.Init.InitApplicationActivity;
 import org.raspiot.raspIot.R;
 import org.raspiot.raspIot.RaspApplication;
 import org.raspiot.raspIot.databaseGlobal.HostAddrDB;
@@ -33,6 +37,8 @@ import com.kyleduo.switchbutton.SwitchButton;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static org.raspiot.raspIot.Auth.LocalValidation.isLogInNeed;
+import static org.raspiot.raspIot.UICommonOperations.KeyboardAction.showKeyboard;
 import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInCenter;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
@@ -45,10 +51,8 @@ import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
 
 public class SettingsActivity extends AppCompatActivity {
 
-
     private static final int HOST_ERROR = -1;
     private static final int HOST_CONFIRM = 1;
-
 
     private String HostAddr;
     private Button confirmHostAddr;
@@ -69,6 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                HomeOrLogIn();
                 finish();
                 break;
             default:
@@ -199,6 +204,25 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            HomeOrLogIn();
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void HomeOrLogIn(){
+        if(isLogInNeed()){
+            Intent intent_login= new Intent(SettingsActivity.this, LogInActivity.class);
+            startActivity(intent_login);
+        }else {
+            Intent intent_home= new Intent(SettingsActivity.this, HomeActivity.class);
+            startActivity(intent_home);
+        }
+    }
+
     private void checkServicesWithNetwork(){
         ControlMessage checkServices = new ControlMessage("get", "server", "checkServices");
         String checkServicesJson = buildJSON(checkServices);
@@ -229,11 +253,6 @@ public class SettingsActivity extends AppCompatActivity {
         hostAddrDB.saveOrUpdate("id = ?", Integer.toString(serverId));
     }
 
-
-    public static void showKeyboard(View view){
-        Context context = RaspApplication.getContext();
-        ((InputMethodManager)(context.getSystemService(Context.INPUT_METHOD_SERVICE))).showSoftInput(view, 0);
-    }
 
     private void hideKeyboard(){
         ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.raspiot.raspIot.Auth.json.LoginForm;
 import org.raspiot.raspIot.Home.HomeActivity;
 import org.raspiot.raspIot.R;
+import org.raspiot.raspIot.Settings.SettingsActivity;
 import org.raspiot.raspIot.databaseGlobal.UserInfoDB;
 import org.raspiot.raspIot.networkGlobal.HttpUtil;
 
@@ -30,6 +31,7 @@ import okhttp3.Response;
 
 import static org.raspiot.raspIot.Auth.LocalValidation.isEmailValid;
 import static org.raspiot.raspIot.Auth.LocalValidation.isPasswordValid;
+import static org.raspiot.raspIot.UICommonOperations.KeyboardAction.showKeyboard;
 import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
 import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
@@ -84,9 +86,19 @@ public class LogInActivity extends AppCompatActivity {
     };
 
     private void initUIWidget(){
+        Button settings = (Button) findViewById(R.id.log_in_settings_button);
+        settings.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_settings= new Intent(LogInActivity.this, SettingsActivity.class);
+                startActivity(intent_settings);
+                finish();
+            }
+        });
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.login_email);
-        mPasswordView = (EditText) findViewById(R.id.login_password);
+        mPasswordView = (EditText) findViewById(R.id.log_in_password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -107,8 +119,14 @@ public class LogInActivity extends AppCompatActivity {
                 String password = getPassword();
                 if(!isEmailValid(email)) {
                     mEmailView.setError("Invalid E-mail address!");
+                    mEmailView.requestFocus();
+                    mEmailView.setFocusableInTouchMode(true);
+                    showKeyboard(mEmailView);
                 }else if(!isPasswordValid(password)){
                     mPasswordView.setError("Password's length is invalid!");
+                    mPasswordView.requestFocus();
+                    mPasswordView.setFocusableInTouchMode(true);
+                    showKeyboard(mPasswordView);
                 }else
                     attemptLogin();
             }

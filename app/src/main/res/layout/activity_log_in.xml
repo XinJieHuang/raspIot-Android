@@ -17,6 +17,14 @@
         android:layout_weight="0.5"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/log_in_settings_button"
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/log_in_icon_settings"/>
+
         <TextView
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
@@ -66,7 +74,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/login_password"
+                android:id="@+id/log_in_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
