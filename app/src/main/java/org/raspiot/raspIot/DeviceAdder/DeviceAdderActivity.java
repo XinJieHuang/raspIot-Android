@@ -73,6 +73,7 @@ public class DeviceAdderActivity extends AppCompatActivity {
 
     //异步消息处理
     private Handler handler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ADD_DEVICE_SUCCEED:

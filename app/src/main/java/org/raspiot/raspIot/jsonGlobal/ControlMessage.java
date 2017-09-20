@@ -1,5 +1,7 @@
 package org.raspiot.raspIot.jsonGlobal;
 
+import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
+
 /**
  * Created by asus on 2017/8/24.
  */
@@ -15,7 +17,7 @@ public class ControlMessage {
         this.cmd = cmd;
         this.target = target;
         this.value = value;
-        this.identity = "app";
+        this.identity = getCurrentUserInfo().getEmail();
         this.updateTime = updateTime;
     }
 
@@ -23,7 +25,7 @@ public class ControlMessage {
         this.cmd = cmd;
         this.target = target;
         this.value = value;
-        this.identity = "app";
+        this.identity = getCurrentUserInfo().getEmail();
     }
 
     public String getCmd() {

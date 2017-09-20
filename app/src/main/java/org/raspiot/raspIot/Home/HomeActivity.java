@@ -53,6 +53,7 @@ import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
@@ -74,8 +75,6 @@ public class HomeActivity extends AppCompatActivity {
     private static final int CMD_ERROR = 2;
 
     public static final String ROOM_NAME = "room_name";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
 
     //异步消息处理
     private Handler handler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case GET_ROOM_LIST_SUCCEED:   //FROM SERVER
@@ -265,7 +265,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.nav_log_out:
-                        if(isRaspIotCloudMode()) {
+                        if(userInfo.getId() != DEFAULT_USER_INFO_ID && isRaspIotCloudMode()) {
                             DataSupport.delete(UserInfoDB.class, userInfo.getId());
                             Intent intent_login = new Intent(HomeActivity.this, LogInActivity.class);
                             startActivity(intent_login);
@@ -331,7 +331,6 @@ public class HomeActivity extends AppCompatActivity {
         });
         addRoomDialog.show();
     }
-
     /*********************Initialize end*****************************/
 
 

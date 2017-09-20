@@ -39,6 +39,7 @@ import okhttp3.Response;
 
 import static org.raspiot.raspIot.Auth.LocalValidation.isLogInNeed;
 import static org.raspiot.raspIot.UICommonOperations.KeyboardAction.showKeyboard;
+import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
 import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInCenter;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
 import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
@@ -57,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String HostAddr;
     private Button confirmHostAddr;
     private EditText inputHostAddr;
+    private TextView cloudServerExplain;
     private SwitchButton switchServerMode;
     private String dataFromNetworkResponse;
 
@@ -83,12 +85,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     //异步消息处理
     private Handler handler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HOST_CONFIRM:   //service confirm
                     //获取消息 更新UI
                     // change UI here
-                    Toast.makeText(SettingsActivity.this, "Host confirm", Toast.LENGTH_SHORT).show();
+                    ToastShowInBottom("Host confirm.\n" + dataFromNetworkResponse);
 
                     //更新服务器Addr
                     // update Server Addr
@@ -119,7 +122,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
-        toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
@@ -131,16 +133,18 @@ public class SettingsActivity extends AppCompatActivity {
         confirmHostAddr = (Button) findViewById(R.id.button_set_host);
         inputHostAddr = (EditText) findViewById(R.id.editText_input_host_addr) ;
         switchServerMode = (SwitchButton) findViewById(R.id.switch_server_mode);
-
+        cloudServerExplain = (TextView) findViewById(R.id.text_cloud_mode_explain);
 
         HostAddr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         inputHostAddr.setText(HostAddr);
+        currentModeExplain();
         switchServerMode.setChecked(CurrentHostModeIsCloudServerMode());
         switchServerMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateCurrentServerAddrToDatabase();
                 inputHostAddr.setText(HostAddr);
+                currentModeExplain();
                 /* Give a friendly message to the user */
                 if(isChecked) {
                     inputHostAddr.setHint("Default:"+DEFAULT_CLOUD_SERVER_ADDR);
@@ -189,6 +193,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+
         final LinearLayout layoutAboutUs = (LinearLayout)findViewById(R.id.layout_about_us);
         TextView textTitleAboutUs = (TextView) findViewById(R.id.text_about_us);
         textTitleAboutUs.setOnClickListener(new View.OnClickListener(){
@@ -233,6 +238,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    private void currentModeExplain(){
+        if(switchServerMode.isChecked()){
+            cloudServerExplain.setText("Cloud server mode: yours or raspiot cloud server,\nBut you need to log in if using raspiot cloud server.");
+        }else {
+            cloudServerExplain.setText("Local area network mode");
+        }
+    }
 
 
 
@@ -293,13 +305,14 @@ public class SettingsActivity extends AppCompatActivity {
     private void onNetworkResponse(String response){
         Message message = new Message();
         if(!response.equals("")) {
-            if (response.equals("Server is ready")) {
+            dataFromNetworkResponse = response;
+            if (response.equals("RaspServer is ready."))
                 message.what = HOST_CONFIRM;
-                handler.sendMessage(message);
-            } else {
-                dataFromNetworkResponse = response;
-                onNetworkError();
-            }
+            else if(response.equals("RaspServer is offline."))
+                message.what = HOST_CONFIRM;
+            else if(response.equals("You need to log in."))
+                message.what = HOST_CONFIRM;
+            handler.sendMessage(message);
         }else{
             dataFromNetworkResponse = "This host couldn't provide service,\n please check!";
             onNetworkError();

@@ -51,7 +51,7 @@ public class DatabaseCommonOperations {
 
         HostAddrDB currentServerAddr = new HostAddrDB();
         if(DataSupport.find(HostAddrDB.class, CURRENT_SERVER_ID) == null){  //currentServer_id 3
-            currentServerAddr.setHostAddr(DEFAULT_RASP_SERVER_ADDR);     //default: Rasp server mode
+            currentServerAddr.setHostAddr(DEFAULT_CLOUD_SERVER_ADDR);     //default: Rasp server mode
             currentServerAddr.save();
         }
 

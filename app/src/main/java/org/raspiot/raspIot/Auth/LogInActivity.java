@@ -62,6 +62,7 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private Handler handler = new Handler(){
+        @Override
         public void handleMessage(Message msg){
             switch (msg.what){
                 case LOG_IN_SUCCEED:
