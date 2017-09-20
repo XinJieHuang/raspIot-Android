@@ -33,12 +33,12 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<Device> mDevice;
     private List<Boolean> groupItemStatus;
 
-    static class GroupItemViewHolder extends RecyclerView.ViewHolder{
+    private static class GroupItemViewHolder extends RecyclerView.ViewHolder{
         ImageView deviceImage;
         TextView deviceName;
         TextView deviceStatus;
 
-        public GroupItemViewHolder(View view){
+        private GroupItemViewHolder(View view){
             super(view);
             deviceImage = (ImageView) view.findViewById(R.id.device_image);
             deviceName = (TextView) view.findViewById(R.id.device_name);
@@ -46,7 +46,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    static class SubItemViewHolder extends RecyclerView.ViewHolder{
+    private static class SubItemViewHolder extends RecyclerView.ViewHolder{
         LinearLayout deviceContentTextLayout;
         TextView deviceContentTextName;
         TextView deviceContentText;
@@ -59,7 +59,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView deviceContentSwitchName;
         SwitchButton deviceContentSwitch;
 
-        public SubItemViewHolder(View view){
+        private SubItemViewHolder(View view){
             super(view);
             deviceContentTextLayout = (LinearLayout) view.findViewById(R.id.device_content_text_layout);
             deviceContentImageLayout = ( LinearLayout) view.findViewById(R.id.device_content_image_layout);
@@ -74,38 +74,38 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    static class ItemStatus {
-        public static final int VIEW_TYPE_GROUPITEM = 0;
-        public static final int VIEW_TYPE_SUBITEM = 1;
+    private static class ItemStatus {
+        private static final int VIEW_TYPE_GROUPITEM = 0;
+        private static final int VIEW_TYPE_SUBITEM = 1;
 
         private int viewType;
         private int groupItemIndex = 0;
         private int subItemIndex = -1;
 
-        public ItemStatus(){
+        private ItemStatus(){
         }
-        public int getViewType(){
+        private int getViewType(){
             return viewType;
         }
-        public void setViewType(int viewType){
+        private void setViewType(int viewType){
             this.viewType = viewType;
         }
-        public int getGroupItemIndex(){
+        private int getGroupItemIndex(){
             return groupItemIndex;
         }
-        public void setGroupItemIndex(int groupItemIndex){
+        private void setGroupItemIndex(int groupItemIndex){
             this.groupItemIndex = groupItemIndex;
         }
-        public int getSubItemIndex(){
+        private int getSubItemIndex(){
             return subItemIndex;
         }
-        public void setSubItemIndex(int subItemIndex){
+        private void setSubItemIndex(int subItemIndex){
             this.subItemIndex = subItemIndex;
         }
     }
 
-/********************************************************************************************************************************/
-/********************************************************************************************************************************/
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
     public DeviceAdapter(List<Device> deviceList){
         groupItemStatus = new ArrayList<>();
         this.mDevice = deviceList;
@@ -134,7 +134,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position){
         final ItemStatus itemStatus = getItemStatusByPosition(position);
         final Device device = mDevice.get(itemStatus.getGroupItemIndex());
-        /**********************************************************************************/
+        /* ******************************************************************************** */
         if(itemStatus.getViewType() == ItemStatus.VIEW_TYPE_GROUPITEM){
             final GroupItemViewHolder groupItemViewHolder = (GroupItemViewHolder) viewHolder;
             /* setter */
@@ -159,7 +159,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 }
             });
-        }  /**********************************************************************************/
+        }  /* ******************************************************************************** */
         else if(itemStatus.getViewType() == ItemStatus.VIEW_TYPE_SUBITEM){
             final SubItemViewHolder subItemViewHolder = (SubItemViewHolder) viewHolder;
             final DeviceContent deviceContent = (DeviceContent)device.getSubItems().get(itemStatus.getSubItemIndex());
@@ -187,30 +187,28 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 subItemViewHolder.deviceContentImageLayout.setVisibility(View.GONE);
                 subItemViewHolder.deviceContentSwitchLayout.setVisibility(View.VISIBLE);
                 subItemViewHolder.deviceContentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                    String deviceName = device.getGroupItem().getName();
+                    String deviceContentName = deviceContent.getName();
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
                         if(device.getGroupItem().getStatus().equals("offline")) {
                             subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
                             ToastShow.ToastShowInBottom("Device offline.");
                         }
-                        else {
+                        else { //online
                             boolean TrueOrFalse;
                             if (isChecked) {
-                                TrueOrFalse =setDeviceContentToValue(device.getGroupItem().getName(), deviceContent.getName(), "true");
-                                if (TrueOrFalse == true) {
+                                TrueOrFalse =setDeviceContentToValue(deviceName, deviceContentName, "true");
+                                if (TrueOrFalse) {
                                     deviceContent.setValue("true");
-                                    ToastShow.ToastShowInBottom(deviceContent.getName() + " turn on.");
+                                    ToastShow.ToastShowInBottom(deviceContentName + " turn on.");
                                 }
                             } else {
-                                TrueOrFalse = setDeviceContentToValue(device.getGroupItem().getName(), deviceContent.getName(), "false");
-                                if (TrueOrFalse == true) {
+                                TrueOrFalse = setDeviceContentToValue(deviceName, deviceContentName, "false");
+                                if (TrueOrFalse) {
                                     deviceContent.setValue("false");
-                                    ToastShow.ToastShowInBottom(deviceContent.getName() + " turn off.");
+                                    ToastShow.ToastShowInBottom(deviceContentName + " turn off.");
                                 }
-                            }
-                            if(TrueOrFalse == false){
-                                    subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
-                                    ToastShow.ToastShowInBottom("Cmd failed.");
                             }
                         }
                     }
