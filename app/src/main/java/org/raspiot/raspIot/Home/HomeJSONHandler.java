@@ -1,9 +1,9 @@
-package org.raspiot.raspIot.Home;
+package org.raspiot.raspiot.Home;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.raspiot.raspIot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Room.json.RoomJSON;
 
 import java.util.List;
 

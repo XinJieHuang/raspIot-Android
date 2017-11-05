@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Auth.json;
+package org.raspiot.raspiot.Auth.json;
 
 /**
  * Created by asus on 2017/9/18.

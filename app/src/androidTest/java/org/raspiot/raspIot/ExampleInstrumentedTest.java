@@ -1,4 +1,4 @@
-package org.raspiot.raspIot;
+package org.raspiot.raspiot;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

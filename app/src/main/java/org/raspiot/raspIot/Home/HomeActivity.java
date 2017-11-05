@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Home;
+package org.raspiot.raspiot.Home;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,24 +18,23 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspIot.Auth.LogInActivity;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.Room.json.RoomJSON;
-import org.raspiot.raspIot.Settings.SettingsActivity;
-import org.raspiot.raspIot.databaseGlobal.RoomDB;
-import org.raspiot.raspIot.Home.list.Room;
-import org.raspiot.raspIot.Home.list.RoomAdapter;
-import org.raspiot.raspIot.databaseGlobal.UserInfoDB;
-import org.raspiot.raspIot.jsonGlobal.ControlMessage;
-import org.raspiot.raspIot.networkGlobal.HttpUtil;
-import org.raspiot.raspIot.networkGlobal.TCPClient;
-import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.Auth.LogInActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Settings.SettingsActivity;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.Home.list.Room;
+import org.raspiot.raspiot.Home.list.RoomAdapter;
+import org.raspiot.raspiot.DatabaseGlobal.UserInfoDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,20 +43,20 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspIot.Auth.LocalValidation.isRaspIotCloudMode;
-import static org.raspiot.raspIot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
-import static org.raspiot.raspIot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
-import static org.raspiot.raspIot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
-import static org.raspiot.raspIot.Home.list.HomeListHandler.updateRoomListAndNotifyItem;
-import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Auth.LocalValidation.isRaspIotCloudMode;
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
+import static org.raspiot.raspiot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
+import static org.raspiot.raspiot.Home.list.HomeListHandler.updateRoomListAndNotifyItem;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -151,7 +150,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
@@ -239,7 +238,7 @@ public class HomeActivity extends AppCompatActivity {
         LinearLayout navMsg = (LinearLayout) navView.getMenu().findItem(R.id.nav_msg).getActionView();
         final TextView msg= (TextView) navMsg.findViewById(R.id.nav_msg_remind);
         //动态修改 TextView 背景图
-        msg.setBackgroundResource(R.drawable.nav_icon_msg_remind);
+        msg.setBackgroundResource(R.drawable.home_nav_icon_msg_remind);
         msg.setText("9");
 
         //navigationView 动态设置 条目 小标题
@@ -254,7 +253,7 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_msg:
-                        msg.setBackgroundResource(R.drawable.nav_icon_msg_none);
+                        msg.setBackgroundResource(R.drawable.home_nav_icon_msg_none);
                         msg.setText("");
                         break;
 
@@ -283,7 +282,7 @@ public class HomeActivity extends AppCompatActivity {
         if(roomDBList.isEmpty())
             return;
         for(RoomDB roomDB : roomDBList){
-            Room room = new Room(roomDB.getName(), R.drawable.item_image);
+            Room room = new Room(roomDB.getName(), R.drawable.recyclerview_item_image);
             roomList.add(room);
         }
     }
@@ -296,43 +295,42 @@ public class HomeActivity extends AppCompatActivity {
         newRoomName.setHint("Input a new room name");
         newRoomName.setMaxLines(1);
         newRoomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER ) {
-                    return true;  // if input Enter, put away
-                }
-                return false;
-            }
-        });
-
+                                                  @Override
+                                                  public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                      if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                                                          return true;  // if input Enter, put away
+                                                      }
+                                                      return false;
+                                                  }
+                                              });
+        addRoomDialog.setCancelable(false);
         addRoomDialog.setTitle("Add a new room");
         addRoomDialog.setView(newRoomName);
         addRoomDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (newRoomName.getText().toString().isEmpty()) {
-                    String roomName = "new room";
-                    for(int i = 1; ; i++) {
-                        if (DataSupport.where("name = ?", roomName).find(RoomDB.class).isEmpty()) {
-                            newRoomName.setText(roomName);
-                            break;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (newRoomName.getText().toString().isEmpty()) {
+                            String roomName = "new room";
+                            for (int i = 1; ; i++) {
+                                if (DataSupport.where("name = ?", roomName).find(RoomDB.class).isEmpty()) {
+                                    newRoomName.setText(roomName);
+                                    break;
+                                }
+                                roomName = "new room " + i;
+                            }
                         }
-                        roomName = "new room " + i;
+                        ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
+                        sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(addNewRoomCmd));
                     }
-                }
-                ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
-                sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(addNewRoomCmd));
-            }
-        });
+                });
         addRoomDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
         addRoomDialog.show();
     }
     /*********************Initialize end*****************************/
-
 
 
 

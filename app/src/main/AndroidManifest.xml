@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.raspiot.raspIot">
+    package="org.raspiot.raspiot">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
-        android:name=".RaspApplication"
+        android:name="org.raspiot.raspiot.RaspApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,12 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Init.FullscreenActivity"
+            android:name="org.raspiot.raspiot.AppInit.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme" />
 
         <activity
-            android:name=".Init.InitApplicationActivity">
+            android:name="org.raspiot.raspiot.AppInit.InitApplicationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,32 +33,32 @@
         </activity>
 
         <activity
-            android:name=".Home.HomeActivity"
+            android:name="org.raspiot.raspiot.Home.HomeActivity"
             android:launchMode="singleTask"
             android:label="@string/app_name">
         </activity>
 
-        <activity android:name=".Settings.SettingsActivity"
+        <activity android:name="org.raspiot.raspiot.Settings.SettingsActivity"
             android:label="@string/title_activity_settings">
         </activity>
 
         <activity
-            android:name=".Room.RoomActivity"
+            android:name="org.raspiot.raspiot.Room.RoomActivity"
             android:label="@string/title_activity_room"
             android:theme="@style/AppTheme" >
         </activity>
 
         <activity
-            android:name=".DeviceAdder.DeviceAdderActivity"
+            android:name="org.raspiot.raspiot.DeviceAdder.DeviceAdderActivity"
             android:label="@string/title_activity_device_adder"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity
-            android:name=".Auth.LogInActivity"
+            android:name="org.raspiot.raspiot.Auth.LogInActivity"
             android:label="@string/title_activity_login" >
         </activity>
-        <activity android:name=".Auth.SignUpActivity" />
+        <activity android:name="org.raspiot.raspiot.Auth.SignUpActivity" />
     </application>
 
 </manifest>

@@ -109,6 +109,59 @@
         android:background="@drawable/cut_off_line"
         android:layout_marginTop="25dp"/>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FDFDFD" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:text="Device"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cut_off_line"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FDFDFD">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="Unauthorized access mode"
+            android:textColor="@android:color/black"
+            android:textSize="20dp" />
+
+        <include
+            android:id="@+id/switch_device_access_mode"
+            layout="@layout/switch_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cut_off_line"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cut_off_line"
+        android:layout_marginTop="25dp"/>
+
     <!--About us-->
     <LinearLayout
         android:orientation="vertical"
@@ -140,9 +193,10 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="70dp"
                 android:layout_marginLeft="10dp"
-                android:text="Actually, just me, so do you want to join me? (*@ο@*) "/>
+                android:text="E-mail: xjhuang@s-an.org\nWebsite: www.raspiot.org\nGithub: https://github.com/ixjhuang/raspiot\nActually, just me, so do you want to join me? (*@ο@*)"
+                android:autoLink="web|email"/>
                 <!--android:text="Actually, just me, keke"-->
 
             <ImageView

@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.networkGlobal;
+package org.raspiot.raspiot.NetworkGlobal;
 
 import android.util.Log;
 
@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 /**
  * Created by asus on 2017/8/24.
@@ -18,7 +20,11 @@ public class TCPClient {
             @Override
             public void run(){
                 try {
-                    Socket socket = new Socket(ip, port);
+                    //Socket socket = new Socket(ip, port);
+                    Socket socket = new Socket();
+                    SocketAddress address = new InetSocketAddress(ip, port);
+                    socket.connect(address, 3000);    // timeout: 3 seconds
+
                     OutputStream out = socket.getOutputStream();
                     InputStream in = socket.getInputStream();
                     out.write(data.getBytes());

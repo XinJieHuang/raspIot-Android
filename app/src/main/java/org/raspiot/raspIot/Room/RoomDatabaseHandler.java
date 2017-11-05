@@ -1,22 +1,22 @@
-package org.raspiot.raspIot.Room;
+package org.raspiot.raspiot.Room;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.databaseGlobal.DeviceContentDB;
-import org.raspiot.raspIot.databaseGlobal.DeviceDB;
-import org.raspiot.raspIot.databaseGlobal.RoomDB;
-import org.raspiot.raspIot.Room.json.DeviceContentJSON;
-import org.raspiot.raspIot.Room.json.DeviceJSON;
-import org.raspiot.raspIot.Room.json.RoomJSON;
-import org.raspiot.raspIot.Room.list.Device;
-import org.raspiot.raspIot.Room.list.DeviceContent;
-import org.raspiot.raspIot.Room.list.DeviceTitle;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.DatabaseGlobal.DeviceContentDB;
+import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.Room.json.DeviceContentJSON;
+import org.raspiot.raspiot.Room.json.DeviceJSON;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Room.list.Device;
+import org.raspiot.raspiot.Room.list.DeviceContent;
+import org.raspiot.raspiot.Room.list.DeviceTitle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspIot.Room.RoomActivity.roomName;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
+import static org.raspiot.raspiot.Room.RoomActivity.roomName;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
 
 /**
  * Created by asus on 2017/8/26.
@@ -35,7 +35,7 @@ public class RoomDatabaseHandler {
         }
 
         for(DeviceDB deviceDB : deviceDBList){
-            DeviceTitle deviceTitle = new DeviceTitle(deviceDB.getName(), R.drawable.item_image, deviceDB.getStatus());
+            DeviceTitle deviceTitle = new DeviceTitle(deviceDB.getName(), R.drawable.recyclerview_item_image, deviceDB.getStatus());
             List<DeviceContentDB> deviceContentDBList = deviceDB.getDeviceContents();
 
             List<DeviceContent> deviceContentList = new ArrayList<>();

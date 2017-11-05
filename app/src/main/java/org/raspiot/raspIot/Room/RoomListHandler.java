@@ -1,13 +1,13 @@
-package org.raspiot.raspIot.Room;
+package org.raspiot.raspiot.Room;
 
-import org.raspiot.raspIot.jsonGlobal.ControlMessage;
-import org.raspiot.raspIot.networkGlobal.TCPClient;
-import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
-import static org.raspiot.raspIot.Room.RoomActivity.roomName;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Room.RoomActivity.roomName;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 /**
  * Created by asus on 2017/9/9.
@@ -15,7 +15,7 @@ import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
 
 public class RoomListHandler {
     private static boolean TrueOrFale;
-    public static boolean setDeviceContentToValue(String deviceName, String deviceContentName, String newValue){
+    public static boolean setValueToDeviceContent(String deviceName, String deviceContentName, String newValue){
         String target = "deviceContent:" + roomName + "/" + deviceName + "/" + deviceContentName;
         ControlMessage setDeviceContentToNewValue = new ControlMessage("set", target, newValue);
 

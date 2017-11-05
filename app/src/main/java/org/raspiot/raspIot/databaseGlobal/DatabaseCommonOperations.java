@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.databaseGlobal;
+package org.raspiot.raspiot.DatabaseGlobal;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -16,6 +16,7 @@ public class DatabaseCommonOperations {
     public static final String STANDARD_INITIAL_TIME = "2015-12-17 22:22:00";
     public static final String DEFAULT_CLOUD_SERVER_ADDR = "www.raspiot.org";
     public static final String DEFAULT_RASP_SERVER_ADDR = "192.168.17.1:22015";
+    public static final String UNAUTHORIZED_DEVICES = "Unauthorized_devices";
 
     public static boolean CurrentHostModeIsCloudServerMode(){
         HostAddrDB hostAddrDB = DataSupport.find(HostAddrDB.class, CURRENT_SERVER_ID);

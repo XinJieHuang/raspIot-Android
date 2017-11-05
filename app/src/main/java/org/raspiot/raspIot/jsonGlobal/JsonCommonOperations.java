@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.jsonGlobal;
+package org.raspiot.raspiot.JsonGlobal;
 
 import com.google.gson.Gson;
 

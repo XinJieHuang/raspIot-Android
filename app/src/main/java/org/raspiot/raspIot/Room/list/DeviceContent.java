@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Room.list;
+package org.raspiot.raspiot.Room.list;
 
 /**
  * Created by asus on 2017/7/31.

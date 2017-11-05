@@ -1,6 +1,6 @@
-package org.raspiot.raspIot.jsonGlobal;
+package org.raspiot.raspiot.JsonGlobal;
 
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 
 /**
  * Created by asus on 2017/8/24.

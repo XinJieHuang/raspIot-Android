@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.databaseGlobal;
+package org.raspiot.raspiot.DatabaseGlobal;
 
 import org.litepal.crud.DataSupport;
 

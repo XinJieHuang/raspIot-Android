@@ -1,16 +1,14 @@
-package org.raspiot.raspIot.Init;
+package org.raspiot.raspiot.AppInit;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import org.raspiot.raspIot.Auth.LogInActivity;
-import org.raspiot.raspIot.Home.HomeActivity;
-import org.raspiot.raspIot.RaspApplication;
+import org.raspiot.raspiot.Auth.LogInActivity;
+import org.raspiot.raspiot.Home.HomeActivity;
 
-import static org.raspiot.raspIot.Auth.LocalValidation.isLogInNeed;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.initHostAddrDatabase;
+import static org.raspiot.raspiot.Auth.LocalValidation.isLogInNeed;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.initHostAddrDatabase;
 
 public class InitApplicationActivity extends AppCompatActivity {
 

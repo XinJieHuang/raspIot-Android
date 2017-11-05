@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/device_adder_ok"
-        android:icon="@drawable/toolbar_icon_ok"
+        android:icon="@drawable/toolbar_icon_done"
         android:title="Add device ok"
         app:showAsAction="always"/>
 </menu>

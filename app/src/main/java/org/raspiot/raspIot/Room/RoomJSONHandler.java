@@ -1,8 +1,8 @@
-package org.raspiot.raspIot.Room;
+package org.raspiot.raspiot.Room;
 
 import com.google.gson.Gson;
 
-import org.raspiot.raspIot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Room.json.RoomJSON;
 
 /**
  * Created by asus on 2017/8/27.

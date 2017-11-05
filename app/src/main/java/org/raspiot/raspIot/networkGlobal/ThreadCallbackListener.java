@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.networkGlobal;
+package org.raspiot.raspiot.NetworkGlobal;
 
 /**
  * Created by asus on 2017/8/25.

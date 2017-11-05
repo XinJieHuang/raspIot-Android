@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Auth;
+package org.raspiot.raspiot.Auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,24 +17,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.raspiot.raspIot.Auth.json.LoginForm;
-import org.raspiot.raspIot.Home.HomeActivity;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.Settings.SettingsActivity;
-import org.raspiot.raspIot.databaseGlobal.UserInfoDB;
-import org.raspiot.raspIot.networkGlobal.HttpUtil;
+import org.raspiot.raspiot.Auth.json.LoginForm;
+import org.raspiot.raspiot.Home.HomeActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.Settings.SettingsActivity;
+import org.raspiot.raspiot.DatabaseGlobal.UserInfoDB;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspIot.Auth.LocalValidation.isEmailValid;
-import static org.raspiot.raspIot.Auth.LocalValidation.isPasswordValid;
-import static org.raspiot.raspIot.UICommonOperations.KeyboardAction.showKeyboard;
-import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
-import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Auth.LocalValidation.isEmailValid;
+import static org.raspiot.raspiot.Auth.LocalValidation.isPasswordValid;
+import static org.raspiot.raspiot.UICommonOperations.KeyboardAction.showKeyboard;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 /**
  * A login screen that offers login via email/password.

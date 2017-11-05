@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Room.json;
+package org.raspiot.raspiot.Room.json;
 
 /**
  * Created by asus on 2017/8/5.

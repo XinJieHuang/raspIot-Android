@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Init;
+package org.raspiot.raspiot.AppInit;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 
-import org.raspiot.raspIot.R;
+import org.raspiot.raspiot.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

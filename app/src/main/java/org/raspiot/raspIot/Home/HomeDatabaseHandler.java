@@ -1,9 +1,8 @@
-package org.raspiot.raspIot.Home;
+package org.raspiot.raspiot.Home;
 
 import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
-import org.raspiot.raspIot.Room.json.RoomJSON;
-import org.raspiot.raspIot.databaseGlobal.RoomDB;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class HomeDatabaseHandler {
                     roomDB.save();
                 }
         if(!roomDBNameList.isEmpty())
-            for(String roomName :  roomDBNameList){
+            for(String roomName : roomDBNameList){
                 DataSupport.deleteAll(RoomDB.class, "name = ?", roomName);
             }
     }

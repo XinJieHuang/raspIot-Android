@@ -1,7 +1,6 @@
-package org.raspiot.raspIot.Home.list;
+package org.raspiot.raspiot.Home.list;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.raspiot.raspIot.Home.HomeActivity;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.Room.RoomActivity;
+import org.raspiot.raspiot.R;
 
 import java.util.List;
 
-import static org.raspiot.raspIot.Home.HomeActivity.ROOM_NAME;
-import static org.raspiot.raspIot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
-import static org.raspiot.raspIot.Home.list.HomeListHandler.canRemoveItemOrNot;
+import static org.raspiot.raspiot.Home.list.HomeListHandler.showBottomDialog;
+import static org.raspiot.raspiot.Home.list.HomeListHandler.getIntoRoom;
 
 
 /**
@@ -59,24 +55,17 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
             public void onClick(View v){
                 int position = holder.getAdapterPosition();
                 Room room = mRoomList.get(position);
-                Intent intent = new Intent(mContext, RoomActivity.class);
-                intent.putExtra(ROOM_NAME, room.getName());
-                mContext.startActivity(intent);
+                getIntoRoom(room.getName());
             }
         });
         holder.roomView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
-                if(canRemoveItemOrNot(mRoomList.get(position).getName())) {
-                    deleteRoomFromDatabase(mRoomList.get(position).getName());
-                    mRoomList.remove(position);
-                    notifyItemRemoved(position);
-                }
+                showBottomDialog(mContext, position, mRoomList, RoomAdapter.this);
                 return true;
             }
         });
-
         return holder;
     }
 
@@ -91,4 +80,5 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public int getItemCount(){
         return mRoomList.size();
     }
+
 }

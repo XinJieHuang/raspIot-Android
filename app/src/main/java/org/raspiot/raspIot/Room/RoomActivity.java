@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Room;
+package org.raspiot.raspiot.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,15 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.raspiot.raspIot.DeviceAdder.DeviceAdderActivity;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.jsonGlobal.ControlMessage;
-import org.raspiot.raspIot.Room.json.RoomJSON;
-import org.raspiot.raspIot.Room.list.Device;
-import org.raspiot.raspIot.Room.list.DeviceAdapter;
-import org.raspiot.raspIot.networkGlobal.HttpUtil;
-import org.raspiot.raspIot.networkGlobal.TCPClient;
-import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.DeviceAdder.DeviceAdderActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Room.list.Device;
+import org.raspiot.raspiot.Room.list.DeviceAdapter;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,17 +33,18 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspIot.Home.HomeActivity.ROOM_NAME;
-import static org.raspiot.raspIot.Room.RoomDatabaseHandler.getDeviceDataFromDatabase;
-import static org.raspiot.raspIot.Room.RoomDatabaseHandler.getLastUpdateTimeFromDatabase;
-import static org.raspiot.raspIot.Room.RoomDatabaseHandler.parseDeviceDataAndSaveToDatabase;
-import static org.raspiot.raspIot.Room.RoomJSONHandler.parseJSONWithGSON;
-import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
+import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
+import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getDeviceDataFromDatabase;
+import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getLastUpdateTimeFromDatabase;
+import static org.raspiot.raspiot.Room.RoomDatabaseHandler.parseDeviceDataAndSaveToDatabase;
+import static org.raspiot.raspiot.Room.RoomJSONHandler.parseJSONWithGSON;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 
 public class RoomActivity extends AppCompatActivity {
@@ -74,7 +75,7 @@ public class RoomActivity extends AppCompatActivity {
     //Toolbar右上角菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        if(!roomName.equals("Unauthorized devices"))
+        if(!roomName.equals(UNAUTHORIZED_DEVICES))
             getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
         return true;
     }
@@ -138,7 +139,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }

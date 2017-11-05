@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Room.list;
+package org.raspiot.raspiot.Room.list;
 
 public class DeviceTitle {
     private String name;

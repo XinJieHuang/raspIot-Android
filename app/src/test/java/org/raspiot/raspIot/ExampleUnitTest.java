@@ -1,4 +1,4 @@
-package org.raspiot.raspIot;
+package org.raspiot.raspiot;
 
 import org.junit.Test;
 

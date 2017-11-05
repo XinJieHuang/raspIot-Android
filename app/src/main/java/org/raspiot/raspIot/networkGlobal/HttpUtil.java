@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.networkGlobal;
+package org.raspiot.raspiot.NetworkGlobal;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

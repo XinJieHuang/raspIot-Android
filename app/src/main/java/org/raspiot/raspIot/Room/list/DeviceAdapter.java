@@ -1,8 +1,9 @@
-package org.raspiot.raspIot.Room.list;
+package org.raspiot.raspiot.Room.list;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,18 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kyleduo.switchbutton.SwitchButton;
 
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.UICommonOperations.ToastShow;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspIot.Room.RoomListHandler.setDeviceContentToValue;
+import static org.raspiot.raspiot.Room.RoomListHandler.setValueToDeviceContent;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
  * Created by asus on 2017/7/31.
@@ -30,7 +31,7 @@ import static org.raspiot.raspIot.Room.RoomListHandler.setDeviceContentToValue;
 public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<Device> mDevice;
+    private List<Device> mDeviceList;
     private List<Boolean> groupItemStatus;
 
     private static class GroupItemViewHolder extends RecyclerView.ViewHolder{
@@ -108,7 +109,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 /* ****************************************************************************************************************************** */
     public DeviceAdapter(List<Device> deviceList){
         groupItemStatus = new ArrayList<>();
-        this.mDevice = deviceList;
+        this.mDeviceList = deviceList;
         initGroupItemStatus(groupItemStatus);
         notifyDataSetChanged();
     }
@@ -133,7 +134,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position){
         final ItemStatus itemStatus = getItemStatusByPosition(position);
-        final Device device = mDevice.get(itemStatus.getGroupItemIndex());
+        final Device device = mDeviceList.get(itemStatus.getGroupItemIndex());
         /* ******************************************************************************** */
         if(itemStatus.getViewType() == ItemStatus.VIEW_TYPE_GROUPITEM){
             final GroupItemViewHolder groupItemViewHolder = (GroupItemViewHolder) viewHolder;
@@ -157,6 +158,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         groupItemStatus.set(groupItemIndex, false);
                         notifyItemRangeRemoved(groupItemViewHolder.getAdapterPosition() + 1, device.getSubItems().size());
                     }
+                }
+            });
+            /*OnLongClickListener*/
+            groupItemViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = groupItemViewHolder.getAdapterPosition();
+                    showDottomDialog(position, v);
+                    return true;
                 }
             });
         }  /* ******************************************************************************** */
@@ -193,21 +203,22 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
                         if(device.getGroupItem().getStatus().equals("offline")) {
                             subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
-                            ToastShow.ToastShowInBottom("Device offline.");
+                            ToastShowInBottom("Device offline.");
                         }
                         else { //online
                             boolean TrueOrFalse;
                             if (isChecked) {
-                                TrueOrFalse =setDeviceContentToValue(deviceName, deviceContentName, "true");
+                                TrueOrFalse = setValueToDeviceContent(deviceName, deviceContentName, "true");
                                 if (TrueOrFalse) {
                                     deviceContent.setValue("true");
-                                    ToastShow.ToastShowInBottom(deviceContentName + " turn on.");
+                                    mDeviceList.get(position).getSubItems();
+                                    ToastShowInBottom(deviceContentName + " turn on.");
                                 }
                             } else {
-                                TrueOrFalse = setDeviceContentToValue(deviceName, deviceContentName, "false");
+                                TrueOrFalse = setValueToDeviceContent(deviceName, deviceContentName, "false");
                                 if (TrueOrFalse) {
                                     deviceContent.setValue("false");
-                                    ToastShow.ToastShowInBottom(deviceContentName + " turn off.");
+                                    ToastShowInBottom(deviceContentName + " turn off.");
                                 }
                             }
                         }
@@ -233,14 +244,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemCount(){
         int itemCount = 0;
-        if(mDevice.size() == 0){
+        if(mDeviceList.size() == 0){
             return 0;
         }
-        for(int i = 0; i < mDevice.size(); i++){
+        for(int i = 0; i < mDeviceList.size(); i++){
             if(groupItemStatus.size() <= i)
                 groupItemStatus.add(false);
             if (groupItemStatus.get(i)) {
-                itemCount += mDevice.get(i).getSubItems().size(); //Add its subitem.size()
+                itemCount += mDeviceList.get(i).getSubItems().size(); //Add its subitem.size()
             }
             itemCount++;    // Add itself anytime
         }
@@ -248,7 +259,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void initGroupItemStatus(List groupItemStatus){
-        for (int i = 0; i < mDevice.size(); i++) {
+        for (int i = 0; i < mDeviceList.size(); i++) {
             groupItemStatus.add(false);
         }
     }
@@ -267,20 +278,71 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }else if(count > position){
                 itemStatus.setViewType(ItemStatus.VIEW_TYPE_SUBITEM);
                 itemStatus.setGroupItemIndex(i - 1);
-                itemStatus.setSubItemIndex(position - ( count - mDevice.get(i - 1).getSubItems().size()));
+                itemStatus.setSubItemIndex(position - ( count - mDeviceList.get(i - 1).getSubItems().size()));
                 break;
             }
             count++;
             if(groupItemStatus.get(i)){
-                count += mDevice.get(i).getSubItems().size();
+                count += mDeviceList.get(i).getSubItems().size();
             }
         }
 
         if(i >= groupItemStatus.size()){
             itemStatus.setGroupItemIndex(i - 1);
             itemStatus.setViewType(ItemStatus.VIEW_TYPE_SUBITEM);
-            itemStatus.setSubItemIndex((position - (count - mDevice.get(i - 1).getSubItems().size())));
+            itemStatus.setSubItemIndex((position - (count - mDeviceList.get(i - 1).getSubItems().size())));
         }
         return itemStatus;
+    }
+
+    private void showDottomDialog(final int position, View v){
+        final Dialog bottomDialog = new Dialog(mContext, R.style.BottomDialog);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.device_bottom_dialog_content, null);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
+        params.width = mContext.getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(mContext, 16f);
+        params.bottomMargin = DensityUtil.dp2px(mContext, 8f);
+        contentView.setLayoutParams(params);
+        bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.setCanceledOnTouchOutside(true);
+
+        TextView move = (TextView) contentView.findViewById(R.id.device_move);
+        TextView rename = (TextView) contentView.findViewById(R.id.device_rename);
+        TextView delete = (TextView) contentView.findViewById(R.id.device_delete);
+        TextView cancel = (TextView) contentView.findViewById(R.id.device_bottom_dialog_cancel);
+
+        move.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.dismiss();
+                ToastShowInBottom("move to");
+            }
+        });
+        rename.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.dismiss();
+                ToastShowInBottom("rename");
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.dismiss();
+                /*if (removeRoom(mRoomList.get(position).getName())) {
+                    deleteRoomFromDatabase(mRoomList.get(position).getName());
+                    mRoomList.remove(position);
+                    notifyItemRemoved(position);
+                }*/
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomDialog.dismiss();
+            }
+        });
+        bottomDialog.show();
     }
 }

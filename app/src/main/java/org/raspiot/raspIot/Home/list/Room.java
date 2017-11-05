@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Home.list;
+package org.raspiot.raspiot.Home.list;
 
 /**
  * Created by asus on 2017/5/18.
@@ -13,6 +13,14 @@ public class Room {
         this.imageId = imageId;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+
     public  String getName(){
         return name;
     }
@@ -20,6 +28,8 @@ public class Room {
     public int getImageId(){
         return imageId;
     }
+
+
 
     public boolean equals(Object o){
         if(this == o)

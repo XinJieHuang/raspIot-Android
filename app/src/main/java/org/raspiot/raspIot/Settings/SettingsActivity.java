@@ -1,4 +1,4 @@
-package org.raspiot.raspIot.Settings;
+package org.raspiot.raspiot.Settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,18 +16,15 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.raspiot.raspIot.Auth.LogInActivity;
-import org.raspiot.raspIot.Home.HomeActivity;
-import org.raspiot.raspIot.Init.InitApplicationActivity;
-import org.raspiot.raspIot.R;
-import org.raspiot.raspIot.RaspApplication;
-import org.raspiot.raspIot.databaseGlobal.HostAddrDB;
-import org.raspiot.raspIot.jsonGlobal.ControlMessage;
-import org.raspiot.raspIot.networkGlobal.HttpUtil;
-import org.raspiot.raspIot.networkGlobal.TCPClient;
-import org.raspiot.raspIot.networkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.Auth.LogInActivity;
+import org.raspiot.raspiot.Home.HomeActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.DatabaseGlobal.HostAddrDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 import android.os.Handler;
@@ -37,18 +34,18 @@ import com.kyleduo.switchbutton.SwitchButton;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspIot.Auth.LocalValidation.isLogInNeed;
-import static org.raspiot.raspIot.UICommonOperations.KeyboardAction.showKeyboard;
-import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInBottom;
-import static org.raspiot.raspIot.UICommonOperations.ToastShow.ToastShowInCenter;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.DEFAULT_RASP_SERVER_ADDR;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspIot.databaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspIot.jsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Auth.LocalValidation.isLogInNeed;
+import static org.raspiot.raspiot.UICommonOperations.KeyboardAction.showKeyboard;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInCenter;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_RASP_SERVER_ADDR;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -313,13 +310,13 @@ public class SettingsActivity extends AppCompatActivity {
             else if(response.equals("You need to log in."))
                 message.what = HOST_CONFIRM;
             handler.sendMessage(message);
-        }else{
-            dataFromNetworkResponse = "This host couldn't provide service,\n please check!";
-            onNetworkError();
         }
+        else
+            onNetworkError();
     }
 
     private void onNetworkError(){
+        dataFromNetworkResponse = "This host couldn't provide service,\n please check!";
         Message message = new Message();
         message.what = HOST_ERROR;
         handler.sendMessage(message);

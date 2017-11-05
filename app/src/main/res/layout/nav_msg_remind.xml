@@ -9,7 +9,7 @@
         android:id="@+id/nav_msg_remind"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/nav_icon_msg_none"
+        android:background="@drawable/home_nav_icon_msg_none"
         android:gravity="center" />
 
 </LinearLayout>
