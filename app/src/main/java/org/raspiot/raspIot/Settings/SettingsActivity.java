@@ -303,9 +303,9 @@ public class SettingsActivity extends AppCompatActivity {
         Message message = new Message();
         if(!response.equals("")) {
             dataFromNetworkResponse = response;
-            if (response.equals("RaspServer is ready."))
+            if (response.equals("raspServer is ready."))
                 message.what = HOST_CONFIRM;
-            else if(response.equals("RaspServer is offline."))
+            else if(response.equals("raspServer is offline."))
                 message.what = HOST_CONFIRM;
             else if(response.equals("You need to log in."))
                 message.what = HOST_CONFIRM;
@@ -316,7 +316,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void onNetworkError(){
-        dataFromNetworkResponse = "This host couldn't provide service,\n please check!";
+        dataFromNetworkResponse = "This host couldn't provide service,\nplease check!";
         Message message = new Message();
         message.what = HOST_ERROR;
         handler.sendMessage(message);
