@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,7 +32,6 @@ import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 import static org.raspiot.raspiot.RaspApplication.getContext;
-import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 /**
@@ -40,7 +40,7 @@ import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 public class HomeListHandler {
 
-    private static boolean TrueOrFale;
+    private static boolean TrueOrFalse;
 
     /*do not use adapter.notifyDataSetChanged(); in every way I can*/
     public static void updateRoomListAndNotifyItem(List<RoomDB> roomDBList, List<Room> roomList, RoomAdapter adapter){
@@ -145,6 +145,8 @@ public class HomeListHandler {
         final String oldName = roomList.get(position).getName();
         final EditText newRoomName = new EditText(context);
         newRoomName.setHint("Input a new room name");
+        newRoomName.setText(oldName);
+        newRoomName.selectAll();
         newRoomName.setMaxLines(1);
         newRoomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -173,7 +175,9 @@ public class HomeListHandler {
                     }
                 }
                 String newName = newRoomName.getText().toString();
-                if(renameRoom(oldName, newName)){
+                ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldName, newName);
+                String deleteRoomJson = buildJSON(deleteRoomCmd);
+                if(renameRoom(deleteRoomJson)){
                     /*update list*/
                     roomList.get(position).setName(newName);
                     adapter.notifyItemChanged(position);
@@ -192,35 +196,35 @@ public class HomeListHandler {
         renameRoomDialog.show();
     }
 
-    private static boolean renameRoom(String oldRoomName, String newRoomName){
+    private static boolean renameRoom(String data){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
-        ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldRoomName, newRoomName);
-        String data = buildJSON(deleteRoomCmd);
         TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
             @Override
             public void onFinish(String response) {
-                TrueOrFale = true;
+                TrueOrFalse = true;
             }
             @Override
             public void onError(Exception e) {
-                TrueOrFale = false;
+                TrueOrFalse = false;
                 e.printStackTrace();
             }
         });
-        return TrueOrFale;
+        return TrueOrFalse;
     }
 
     private static void showDelRoomDialog(final Context context,final int position, final List<Room> roomList, final RoomAdapter adapter){
         AlertDialog.Builder delRoom = new AlertDialog.Builder(context);
-        String roomName = roomList.get(position).getName();
+        final String roomName = roomList.get(position).getName();
         delRoom.setCancelable(false);
         delRoom.setTitle("Delete " + roomName);
         delRoom.setMessage("All devices of " + roomName + " will be moved to " + UNAUTHORIZED_DEVICES + ".");
         delRoom.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
+                String data = buildJSON(deleteRoomCmd);
                 if (removeRoom(roomList.get(position).getName())) {
                     deleteRoomFromDatabase(roomList.get(position).getName());
                     roomList.remove(position);
@@ -236,23 +240,22 @@ public class HomeListHandler {
         delRoom.show();
     }
 
-    private static boolean removeRoom(String roomName){
+    private static boolean removeRoom(String data){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
-        ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
-        String data = buildJSON(deleteRoomCmd);
-        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
+
+        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener(){
             @Override
             public void onFinish(String response) {
-                TrueOrFale = true;
+                TrueOrFalse = true;
             }
             @Override
             public void onError(Exception e) {
-                TrueOrFale = false;
+                TrueOrFalse = false;
                 e.printStackTrace();
             }
         });
-        return TrueOrFale;
+        return TrueOrFalse;
     }
 }

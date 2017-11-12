@@ -169,9 +169,9 @@ public class HomeActivity extends AppCompatActivity {
         ControlMessage getRoomList = new ControlMessage("get", "room", "roomlist");
         String getRoomListJson = buildJSON(getRoomList);
         if(CurrentHostModeIsCloudServerMode())
-            sendRequestWithOkHttp(getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/relay", getRoomListJson);
+            sendRequestWithOkHttp(getRoomListJson);
         else {
-            sendRequestWithSocket(getHostAddrFromDatabase(RASP_SERVER_ID), getRoomListJson);
+            sendRequestWithSocket(getRoomListJson);
         }
     }
 
@@ -320,7 +320,7 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         }
                         ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
-                        sendRequestWithSocket(getHostAddrFromDatabase(CURRENT_SERVER_ID), buildJSON(addNewRoomCmd));
+                        sendRequestWithSocket(buildJSON(addNewRoomCmd));
                     }
                 });
         addRoomDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -352,7 +352,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void sendRequestWithSocket(String addr, String data){
+    private void sendRequestWithSocket(String data){
+        String addr = getHostAddrFromDatabase(RASP_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
         TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
@@ -369,7 +370,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void sendRequestWithOkHttp(String addr, String data){
+    private void sendRequestWithOkHttp(String data){
+        String addr = getHostAddrFromDatabase(CLOUD_SERVER_ID)+"/api/relay";
         HttpUtil.sendOkHttpRequest(addr, data, new okhttp3.Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -403,5 +405,4 @@ public class HomeActivity extends AppCompatActivity {
         message.what = NETWORK_ERROR;
         handler.sendMessage(message);
     }
-
 }
