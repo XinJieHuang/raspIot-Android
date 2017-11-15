@@ -211,7 +211,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 TrueOrFalse = setValueToDeviceContent(deviceName, deviceContentName, "true");
                                 if (TrueOrFalse) {
                                     deviceContent.setValue("true");
-                                    mDeviceList.get(position).getSubItems();
+                                    //mDeviceList.get(position).getSubItems();
                                     ToastShowInBottom(deviceContentName + " turn on.");
                                 }
                             } else {
