@@ -10,9 +10,12 @@ public class DeviceTitle {
         this.imageId = imageId;
         setStatus(status);
     }
-
     public  String getName(){
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getImageId(){

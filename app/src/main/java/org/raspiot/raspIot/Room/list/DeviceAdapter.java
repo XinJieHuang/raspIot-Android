@@ -1,9 +1,7 @@
 package org.raspiot.raspiot.Room.list;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +14,12 @@ import com.bumptech.glide.Glide;
 import com.kyleduo.switchbutton.SwitchButton;
 
 import org.raspiot.raspiot.R;
-import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspiot.Room.RoomListHandler.setValueToDeviceContent;
+import static org.raspiot.raspiot.Room.list.DeviceListHandler.setValueToDeviceContent;
+import static org.raspiot.raspiot.Room.list.DeviceListHandler.showBottomDialog;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
@@ -165,7 +163,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public boolean onLongClick(View v) {
                     int position = groupItemViewHolder.getAdapterPosition();
-                    showDottomDialog(position, v);
+                    showBottomDialog(mContext, position, mDeviceList, DeviceAdapter.this);
                     return true;
                 }
             });
@@ -295,54 +293,4 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return itemStatus;
     }
 
-    private void showDottomDialog(final int position, View v){
-        final Dialog bottomDialog = new Dialog(mContext, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(mContext).inflate(R.layout.device_bottom_dialog_content, null);
-        bottomDialog.setContentView(contentView);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
-        params.width = mContext.getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(mContext, 16f);
-        params.bottomMargin = DensityUtil.dp2px(mContext, 8f);
-        contentView.setLayoutParams(params);
-        bottomDialog.getWindow().setGravity(Gravity.BOTTOM);
-        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
-        bottomDialog.setCanceledOnTouchOutside(true);
-
-        TextView move = (TextView) contentView.findViewById(R.id.device_move);
-        TextView rename = (TextView) contentView.findViewById(R.id.device_rename);
-        TextView delete = (TextView) contentView.findViewById(R.id.device_delete);
-        TextView cancel = (TextView) contentView.findViewById(R.id.device_bottom_dialog_cancel);
-
-        move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-                ToastShowInBottom("move to");
-            }
-        });
-        rename.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-                ToastShowInBottom("rename");
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-                /*if (removeRoom(mRoomList.get(position).getName())) {
-                    deleteRoomFromDatabase(mRoomList.get(position).getName());
-                    mRoomList.remove(position);
-                    notifyItemRemoved(position);
-                }*/
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomDialog.dismiss();
-            }
-        });
-        bottomDialog.show();
-    }
 }

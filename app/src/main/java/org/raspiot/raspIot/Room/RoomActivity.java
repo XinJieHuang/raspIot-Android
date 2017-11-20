@@ -54,7 +54,7 @@ public class RoomActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefresh;
     private String dataFromNetworkResponse;
 
-    protected static String roomName;
+    public static String roomName;
     private final int GET_DEVICE_LIST_SUCCEED = 1;
     private final int GET_DEVICE_LIST_ERROR = -1;
 

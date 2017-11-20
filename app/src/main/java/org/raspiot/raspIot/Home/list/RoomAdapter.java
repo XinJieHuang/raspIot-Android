@@ -14,8 +14,8 @@ import org.raspiot.raspiot.R;
 
 import java.util.List;
 
-import static org.raspiot.raspiot.Home.list.HomeListHandler.showBottomDialog;
-import static org.raspiot.raspiot.Home.list.HomeListHandler.getIntoRoom;
+import static org.raspiot.raspiot.Home.list.RoomListHandler.showBottomDialog;
+import static org.raspiot.raspiot.Home.list.RoomListHandler.getIntoRoom;
 
 
 /**
@@ -31,7 +31,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         ImageView roomImage;
         TextView roomName;
 
-        public ViewHolder(View view){
+        private ViewHolder(View view){
             super(view);
             roomView = view;
             roomImage = (ImageView)view.findViewById(R.id.room_image);

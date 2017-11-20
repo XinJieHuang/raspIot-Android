@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,9 +37,9 @@ import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
  * Created by asus on 2017/8/27.
  */
 
-public class HomeListHandler {
+public class RoomListHandler {
 
-    private static boolean TrueOrFalse;
+    private static boolean TrueOrFalse = true;
 
     /*do not use adapter.notifyDataSetChanged(); in every way I can*/
     public static void updateRoomListAndNotifyItem(List<RoomDB> roomDBList, List<Room> roomList, RoomAdapter adapter){
@@ -94,7 +93,7 @@ public class HomeListHandler {
     }
 
 
-    public static void showBottomDialog(final Context context, final int position, final List<Room> roomList, final RoomAdapter adapter){
+    protected static void showBottomDialog(final Context context, final int position, final List<Room> roomList, final RoomAdapter adapter){
         final String roomName = roomList.get(position).getName();
         final Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.room_bottom_dialog_content, null);
@@ -144,7 +143,7 @@ public class HomeListHandler {
 
         final String oldName = roomList.get(position).getName();
         final EditText newRoomName = new EditText(context);
-        newRoomName.setHint("Input a new room name");
+        newRoomName.setHint("Input new room name");
         newRoomName.setText(oldName);
         newRoomName.selectAll();
         newRoomName.setMaxLines(1);
@@ -155,7 +154,6 @@ public class HomeListHandler {
                     return true;  // if input Enter, put away
                 }
                 return false;
-
             }
         });
         renameRoomDialog.setCancelable(false);
@@ -225,7 +223,7 @@ public class HomeListHandler {
             public void onClick(DialogInterface dialog, int which) {
                 ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
                 String data = buildJSON(deleteRoomCmd);
-                if (removeRoom(roomList.get(position).getName())) {
+                if (deleteRoom(data)) {
                     deleteRoomFromDatabase(roomList.get(position).getName());
                     roomList.remove(position);
                     adapter.notifyItemRemoved(position);
@@ -240,7 +238,7 @@ public class HomeListHandler {
         delRoom.show();
     }
 
-    private static boolean removeRoom(String data){
+    private static boolean deleteRoom(String data){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
