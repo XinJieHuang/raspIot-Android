@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.raspiot.raspiot.Auth.LogInActivity">
+    tools:context="org.raspiot.raspot.Auth.LogInActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

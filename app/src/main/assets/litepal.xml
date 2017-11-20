@@ -3,11 +3,11 @@
     <dbname value="raspIot"></dbname>
     <version value="1"> </version>
     <list>
-        <mapping class="org.raspiot.raspiot.DatabaseGlobal.RoomDB"></mapping>
-        <mapping class="org.raspiot.raspiot.DatabaseGlobal.DeviceDB"></mapping>
-        <mapping class="org.raspiot.raspiot.DatabaseGlobal.DeviceContentDB"></mapping>
+        <mapping class="org.raspiot.raspot.DatabaseGlobal.RoomDB"></mapping>
+        <mapping class="org.raspiot.raspot.DatabaseGlobal.DeviceDB"></mapping>
+        <mapping class="org.raspiot.raspot.DatabaseGlobal.DeviceContentDB"></mapping>
 
-        <mapping class="org.raspiot.raspiot.DatabaseGlobal.HostAddrDB"></mapping>
-        <mapping class="org.raspiot.raspiot.DatabaseGlobal.UserInfoDB"></mapping>
+        <mapping class="org.raspiot.raspot.DatabaseGlobal.HostAddrDB"></mapping>
+        <mapping class="org.raspiot.raspot.DatabaseGlobal.UserInfoDB"></mapping>
     </list>
 </litepal>
