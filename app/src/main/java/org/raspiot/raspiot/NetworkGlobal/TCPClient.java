@@ -1,4 +1,4 @@
-package org.raspiot.raspot.NetworkGlobal;
+package org.raspiot.raspiot.NetworkGlobal;
 
 import android.util.Log;
 

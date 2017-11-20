@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Room.list;
+package org.raspiot.raspiot.Room.list;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +13,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.kyleduo.switchbutton.SwitchButton;
 
-import org.raspiot.raspot.R;
+import org.raspiot.raspiot.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspot.Room.list.DeviceListHandler.setValueToDeviceContent;
-import static org.raspiot.raspot.Room.list.DeviceListHandler.showBottomDialog;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.Room.list.DeviceListHandler.setValueToDeviceContent;
+import static org.raspiot.raspiot.Room.list.DeviceListHandler.showBottomDialog;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
  * Created by asus on 2017/7/31.

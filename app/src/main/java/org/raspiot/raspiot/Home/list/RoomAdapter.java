@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Home.list;
+package org.raspiot.raspiot.Home.list;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.raspiot.raspot.R;
+import org.raspiot.raspiot.R;
 
 import java.util.List;
 
-import static org.raspiot.raspot.Home.list.RoomListHandler.showBottomDialog;
-import static org.raspiot.raspot.Home.list.RoomListHandler.getIntoRoom;
+import static org.raspiot.raspiot.Home.list.RoomListHandler.showBottomDialog;
+import static org.raspiot.raspiot.Home.list.RoomListHandler.getIntoRoom;
 
 
 /**

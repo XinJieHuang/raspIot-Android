@@ -1,8 +1,8 @@
-package org.raspiot.raspot.Home;
+package org.raspiot.raspiot.Home;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspot.Room.json.RoomJSON;
-import org.raspiot.raspot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
 
 import java.util.ArrayList;
 import java.util.List;

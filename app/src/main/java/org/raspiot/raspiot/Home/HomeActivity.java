@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Home;
+package org.raspiot.raspiot.Home;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,18 +23,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspot.Auth.LogInActivity;
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.Room.json.RoomJSON;
-import org.raspiot.raspot.Settings.SettingsActivity;
-import org.raspiot.raspot.DatabaseGlobal.RoomDB;
-import org.raspiot.raspot.Home.list.Room;
-import org.raspiot.raspot.Home.list.RoomAdapter;
-import org.raspiot.raspot.DatabaseGlobal.UserInfoDB;
-import org.raspiot.raspot.JsonGlobal.ControlMessage;
-import org.raspiot.raspot.NetworkGlobal.HttpUtil;
-import org.raspiot.raspot.NetworkGlobal.TCPClient;
-import org.raspiot.raspot.NetworkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.Auth.LogInActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Settings.SettingsActivity;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.Home.list.Room;
+import org.raspiot.raspiot.Home.list.RoomAdapter;
+import org.raspiot.raspiot.DatabaseGlobal.UserInfoDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,19 +43,19 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspot.Auth.LocalValidation.isRaspIotCloudMode;
-import static org.raspiot.raspot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
-import static org.raspiot.raspot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
-import static org.raspiot.raspot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
-import static org.raspiot.raspot.Home.list.RoomListHandler.updateRoomListAndNotifyItem;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInBottom;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Auth.LocalValidation.isRaspIotCloudMode;
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
+import static org.raspiot.raspiot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
+import static org.raspiot.raspiot.Home.list.RoomListHandler.updateRoomListAndNotifyItem;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 
 public class HomeActivity extends AppCompatActivity {

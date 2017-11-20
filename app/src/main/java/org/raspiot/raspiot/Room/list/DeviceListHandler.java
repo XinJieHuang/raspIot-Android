@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Room.list;
+package org.raspiot.raspiot.Room.list;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,20 +13,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspot.DatabaseGlobal.DeviceDB;
-import org.raspiot.raspot.JsonGlobal.ControlMessage;
-import org.raspiot.raspot.NetworkGlobal.TCPClient;
-import org.raspiot.raspot.NetworkGlobal.ThreadCallbackListener;
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.UICommonOperations.DensityUtil;
+import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
-import static org.raspiot.raspot.Room.RoomActivity.roomName;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspot.JsonGlobal.JsonCommonOperations.buildJSON;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.Room.RoomActivity.roomName;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
  * Created by asus on 2017/9/9.

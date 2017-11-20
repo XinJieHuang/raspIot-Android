@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Home.list;
+package org.raspiot.raspiot.Home.list;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,24 +14,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.DatabaseGlobal.RoomDB;
-import org.raspiot.raspot.JsonGlobal.ControlMessage;
-import org.raspiot.raspot.NetworkGlobal.TCPClient;
-import org.raspiot.raspot.NetworkGlobal.ThreadCallbackListener;
-import org.raspiot.raspot.Room.RoomActivity;
-import org.raspiot.raspot.UICommonOperations.DensityUtil;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.Room.RoomActivity;
+import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspot.Home.HomeActivity.ROOM_NAME;
-import static org.raspiot.raspot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
-import static org.raspiot.raspot.JsonGlobal.JsonCommonOperations.buildJSON;
-import static org.raspiot.raspot.RaspApplication.getContext;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.showWarning;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.RaspApplication.getContext;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 /**
  * Created by asus on 2017/8/27.

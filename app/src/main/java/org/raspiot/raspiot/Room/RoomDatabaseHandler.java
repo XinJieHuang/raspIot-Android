@@ -1,22 +1,22 @@
-package org.raspiot.raspot.Room;
+package org.raspiot.raspiot.Room;
 
 import org.litepal.crud.DataSupport;
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.DatabaseGlobal.DeviceContentDB;
-import org.raspiot.raspot.DatabaseGlobal.DeviceDB;
-import org.raspiot.raspot.DatabaseGlobal.RoomDB;
-import org.raspiot.raspot.Room.json.DeviceContentJSON;
-import org.raspiot.raspot.Room.json.DeviceJSON;
-import org.raspiot.raspot.Room.json.RoomJSON;
-import org.raspiot.raspot.Room.list.Device;
-import org.raspiot.raspot.Room.list.DeviceContent;
-import org.raspiot.raspot.Room.list.DeviceTitle;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.DatabaseGlobal.DeviceContentDB;
+import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
+import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
+import org.raspiot.raspiot.Room.json.DeviceContentJSON;
+import org.raspiot.raspiot.Room.json.DeviceJSON;
+import org.raspiot.raspiot.Room.json.RoomJSON;
+import org.raspiot.raspiot.Room.list.Device;
+import org.raspiot.raspiot.Room.list.DeviceContent;
+import org.raspiot.raspiot.Room.list.DeviceTitle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspot.Room.RoomActivity.roomName;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
+import static org.raspiot.raspiot.Room.RoomActivity.roomName;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
 
 /**
  * Created by asus on 2017/8/26.

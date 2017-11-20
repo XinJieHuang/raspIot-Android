@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Home.list;
+package org.raspiot.raspiot.Home.list;
 
 /**
  * Created by asus on 2017/5/18.

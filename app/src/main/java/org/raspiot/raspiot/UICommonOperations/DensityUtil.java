@@ -1,4 +1,4 @@
-package org.raspiot.raspot.UICommonOperations;
+package org.raspiot.raspiot.UICommonOperations;
 
 import android.content.Context;
 import android.util.TypedValue;

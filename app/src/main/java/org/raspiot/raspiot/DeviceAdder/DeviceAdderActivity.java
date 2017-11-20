@@ -1,4 +1,4 @@
-package org.raspiot.raspot.DeviceAdder;
+package org.raspiot.raspiot.DeviceAdder;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,23 +10,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.JsonGlobal.ControlMessage;
-import org.raspiot.raspot.NetworkGlobal.HttpUtil;
-import org.raspiot.raspot.NetworkGlobal.TCPClient;
-import org.raspiot.raspot.NetworkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInBottom;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 public class DeviceAdderActivity extends AppCompatActivity {
 

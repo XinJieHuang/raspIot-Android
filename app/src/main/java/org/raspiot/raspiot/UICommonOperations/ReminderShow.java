@@ -1,4 +1,4 @@
-package org.raspiot.raspot.UICommonOperations;
+package org.raspiot.raspiot.UICommonOperations;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,7 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import static org.raspiot.raspot.RaspApplication.getContext;
+import static org.raspiot.raspiot.RaspApplication.getContext;
 
 /**
  * Created by asus on 2017/8/25.

@@ -1,10 +1,10 @@
-package org.raspiot.raspot.UICommonOperations;
+package org.raspiot.raspiot.UICommonOperations;
 
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import org.raspiot.raspot.RaspApplication;
+import org.raspiot.raspiot.RaspApplication;
 
 /**
  * Created by asus on 2017/9/19.

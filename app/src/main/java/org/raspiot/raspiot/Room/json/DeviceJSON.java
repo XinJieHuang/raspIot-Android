@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Room.json;
+package org.raspiot.raspiot.Room.json;
 
 import java.util.List;
 

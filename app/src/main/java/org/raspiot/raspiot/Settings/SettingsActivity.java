@@ -1,4 +1,4 @@
-package org.raspiot.raspot.Settings;
+package org.raspiot.raspiot.Settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,14 +17,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.raspiot.raspot.Auth.LogInActivity;
-import org.raspiot.raspot.Home.HomeActivity;
-import org.raspiot.raspot.R;
-import org.raspiot.raspot.DatabaseGlobal.HostAddrDB;
-import org.raspiot.raspot.JsonGlobal.ControlMessage;
-import org.raspiot.raspot.NetworkGlobal.HttpUtil;
-import org.raspiot.raspot.NetworkGlobal.TCPClient;
-import org.raspiot.raspot.NetworkGlobal.ThreadCallbackListener;
+import org.raspiot.raspiot.Auth.LogInActivity;
+import org.raspiot.raspiot.Home.HomeActivity;
+import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.DatabaseGlobal.HostAddrDB;
+import org.raspiot.raspiot.JsonGlobal.ControlMessage;
+import org.raspiot.raspiot.NetworkGlobal.HttpUtil;
+import org.raspiot.raspiot.NetworkGlobal.TCPClient;
+import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
 
 import java.io.IOException;
 import android.os.Handler;
@@ -34,18 +34,18 @@ import com.kyleduo.switchbutton.SwitchButton;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspot.Auth.LocalValidation.isLogInNeed;
-import static org.raspiot.raspot.UICommonOperations.KeyboardAction.showKeyboard;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInBottom;
-import static org.raspiot.raspot.UICommonOperations.ReminderShow.ToastShowInCenter;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_RASP_SERVER_ADDR;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Auth.LocalValidation.isLogInNeed;
+import static org.raspiot.raspiot.UICommonOperations.KeyboardAction.showKeyboard;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInCenter;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_RASP_SERVER_ADDR;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 
 public class SettingsActivity extends AppCompatActivity {
 

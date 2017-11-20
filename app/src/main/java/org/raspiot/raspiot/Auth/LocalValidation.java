@@ -1,16 +1,16 @@
-package org.raspiot.raspot.Auth;
+package org.raspiot.raspiot.Auth;
 
-import org.raspiot.raspot.DatabaseGlobal.UserInfoDB;
+import org.raspiot.raspiot.DatabaseGlobal.UserInfoDB;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
-import static org.raspiot.raspot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CurrentHostModeIsCloudServerMode;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_CLOUD_SERVER_ADDR;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.DEFAULT_USER_INFO_ID;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 
 /**
  * Created by asus on 2017/9/18.
