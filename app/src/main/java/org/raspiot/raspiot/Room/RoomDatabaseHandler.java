@@ -15,6 +15,7 @@ import org.raspiot.raspiot.Room.list.DeviceTitle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.raspiot.raspiot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
 
@@ -87,7 +88,7 @@ public class RoomDatabaseHandler {
                 deviceDB.setId(deviceDBCheck.getId());
             }
             /* if device's status is false, means couldn't get deviceContent from iotServer*/
-            if(deviceDB.getStatus() == true) {
+            if(deviceDB.getStatus()) {
                 /*%%%%%%%%%%%%%%%%%%%%%%%%DeviceContent List%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 List<DeviceContentJSON> deviceContentJSONList = deviceJSON.getDeviceContent();
                 List<DeviceContentDB> deviceContentDBList = new ArrayList<>();
@@ -102,7 +103,7 @@ public class RoomDatabaseHandler {
                 /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 deviceDB.setDeviceContentDBList(deviceContentDBList);
             }
-            if(deviceDB.getStatus() == false)   /*LitePal not support set a value to default*/
+            if(!deviceDB.getStatus())   /*LitePal not support set a value to default*/
                 deviceDB.setToDefault("status");
             deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
             deviceDBList.add(deviceDB);
@@ -111,5 +112,19 @@ public class RoomDatabaseHandler {
         roomDB.setDeviceDBList(deviceDBList);
         roomDB.saveOrUpdate("name = ?", roomDB.getName());
         /* ************************************Room******************************** */
+    }
+
+    public static List<String> getRestRoomList(String roomName){
+        List<RoomDB> roomDBList = getAllRoomDataFromDatabase();
+        List<String> roomList = new ArrayList<>();
+        if(roomDBList.isEmpty())
+            return roomList;
+        int i = 0;
+        for(RoomDB roomDB : roomDBList){
+            roomList.add(roomDB.getName());
+        }
+        if(!roomName.equals("Home"))
+            roomList.remove(roomName);
+        return roomList;
     }
 }

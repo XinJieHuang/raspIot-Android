@@ -26,6 +26,7 @@ import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
@@ -80,7 +81,7 @@ public class DeviceListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                ToastShowInBottom("move to");
+                showMoveDeviceDialog(context, position, deviceList, adapter);
             }
         });
         rename.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +148,7 @@ public class DeviceListHandler {
                 String newName = newDeviceName.getText().toString();
                 ControlMessage renameDeviceCmd = new ControlMessage("set", "device:" + roomName + "/" + oldName, roomName + "/" + newName);
                 String renameDeviceJson = buildJSON(renameDeviceCmd);
-                if(renameDevice(renameDeviceJson)){
+                if(sendCmd(renameDeviceJson)){
                     /*update list*/
                     deviceList.get(position).getGroupItem().setName(newName);
                     adapter.notifyItemChanged(position);
@@ -184,4 +185,44 @@ public class DeviceListHandler {
         return TrueOrFalse;
     }
 
+
+    private static void showMoveDeviceDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
+        final AlertDialog.Builder moveDeviceDialog = new AlertDialog.Builder(context);
+
+        List<String> roomList = getRestRoomList(roomName);
+        final String[] roomItemList = roomList.toArray(new String[roomList.size()]);
+        final String deviceName = deviceList.get(position).getGroupItem().getName();
+
+        moveDeviceDialog.setCancelable(false);
+        moveDeviceDialog.setTitle("Move [" + deviceName + "] to");
+        moveDeviceDialog.setItems(roomItemList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ControlMessage moveDeviceCmd = new ControlMessage("set", "device:" + roomName + "/" + deviceName, roomItemList[which] + "/" + deviceName);
+                String moveDeviceJson = buildJSON(moveDeviceCmd);
+                if(sendCmd(moveDeviceJson)){
+                    ToastShowInBottom("Move to " + roomItemList[which]);
+                }
+            }
+        });
+        moveDeviceDialog.show();
+    }
+
+    private static boolean sendCmd(String data){
+        String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
+        String ip = addr.split(":")[0];
+        int port = Integer.parseInt(addr.split(":")[1]);
+        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                TrueOrFalse = true;
+            }
+            @Override
+            public void onError(Exception e) {
+                TrueOrFalse = false;
+                e.printStackTrace();
+            }
+        });
+        return TrueOrFalse;
+    }
 }

@@ -48,7 +48,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         if(mContext == null){
             mContext = parent.getContext();
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.room_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_room_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
         holder.roomView.setOnClickListener(new View.OnClickListener(){
             @Override

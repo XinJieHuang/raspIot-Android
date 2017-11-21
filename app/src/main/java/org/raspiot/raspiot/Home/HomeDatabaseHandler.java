@@ -51,7 +51,7 @@ public class HomeDatabaseHandler {
     }
 
 
-    protected static List<RoomDB> getAllRoomDataFromDatabase(){
+    public static List<RoomDB> getAllRoomDataFromDatabase(){
         List<RoomDB> roomDBList = DataSupport.findAll(RoomDB.class);
         return roomDBList;
     }

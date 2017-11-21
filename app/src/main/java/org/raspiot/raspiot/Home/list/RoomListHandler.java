@@ -96,7 +96,7 @@ public class RoomListHandler {
     protected static void showBottomDialog(final Context context, final int position, final List<Room> roomList, final RoomAdapter adapter){
         final String roomName = roomList.get(position).getName();
         final Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.room_bottom_dialog_content, null);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.home_bottom_dialog_content, null);
         bottomDialog.setContentView(contentView);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
         params.width = context.getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(context, 16f);
@@ -175,7 +175,7 @@ public class RoomListHandler {
                 String newName = newRoomName.getText().toString();
                 ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldName, newName);
                 String deleteRoomJson = buildJSON(deleteRoomCmd);
-                if(renameRoom(deleteRoomJson)){
+                if(sendCmd(deleteRoomJson)){
                     /*update list*/
                     roomList.get(position).setName(newName);
                     adapter.notifyItemChanged(position);
@@ -194,24 +194,6 @@ public class RoomListHandler {
         renameRoomDialog.show();
     }
 
-    private static boolean renameRoom(String data){
-        String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
-        String ip = addr.split(":")[0];
-        int port = Integer.parseInt(addr.split(":")[1]);
-        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                TrueOrFalse = true;
-            }
-            @Override
-            public void onError(Exception e) {
-                TrueOrFalse = false;
-                e.printStackTrace();
-            }
-        });
-        return TrueOrFalse;
-    }
-
     private static void showDelRoomDialog(final Context context,final int position, final List<Room> roomList, final RoomAdapter adapter){
         AlertDialog.Builder delRoom = new AlertDialog.Builder(context);
         final String roomName = roomList.get(position).getName();
@@ -223,7 +205,7 @@ public class RoomListHandler {
             public void onClick(DialogInterface dialog, int which) {
                 ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
                 String data = buildJSON(deleteRoomCmd);
-                if (deleteRoom(data)) {
+                if (sendCmd(data)) {
                     deleteRoomFromDatabase(roomList.get(position).getName());
                     roomList.remove(position);
                     adapter.notifyItemRemoved(position);
@@ -238,7 +220,7 @@ public class RoomListHandler {
         delRoom.show();
     }
 
-    private static boolean deleteRoom(String data){
+    private static boolean sendCmd(String data){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
