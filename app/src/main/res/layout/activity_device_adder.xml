@@ -53,11 +53,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginRight="25dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:inputType="textPersonName"
             android:hint="device uuid" />
 
+        <Button
+            android:id="@+id/btn_device_adder_qr_code"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/qr_code_scan" />
     </LinearLayout>
 
     <ImageView
@@ -87,10 +94,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginRight="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginEnd="50dp"
         android:inputType="textPersonName"
         android:hint="device name" />
-
     </LinearLayout>
 
     <ImageView
