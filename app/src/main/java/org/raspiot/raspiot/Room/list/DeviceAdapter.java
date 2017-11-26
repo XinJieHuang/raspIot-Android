@@ -202,22 +202,11 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         if(device.getGroupItem().getStatus().equals("offline")) {
                             subItemViewHolder.deviceContentSwitch.setChecked(!isChecked);
                             ToastShowInBottom("Device offline.");
-                        }
-                        else { //online
-                            boolean TrueOrFalse;
+                        } else { //online
                             if (isChecked) {
-                                TrueOrFalse = setValueToDeviceContent(deviceName, deviceContentName, "true");
-                                if (TrueOrFalse) {
-                                    deviceContent.setValue("true");
-                                    //mDeviceList.get(position).getSubItems();
-                                    ToastShowInBottom(deviceContentName + " turn on.");
-                                }
+                                setValueToDeviceContent(deviceName, deviceContentName, deviceContent, "true");
                             } else {
-                                TrueOrFalse = setValueToDeviceContent(deviceName, deviceContentName, "false");
-                                if (TrueOrFalse) {
-                                    deviceContent.setValue("false");
-                                    ToastShowInBottom(deviceContentName + " turn off.");
-                                }
+                                setValueToDeviceContent(deviceName, deviceContentName, deviceContent, "false");
                             }
                         }
                     }

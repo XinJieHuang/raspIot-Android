@@ -3,7 +3,10 @@ package org.raspiot.raspiot.Room.list;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.litepal.crud.DataSupport;
 import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
 import org.raspiot.raspiot.JsonGlobal.ControlMessage;
 import org.raspiot.raspiot.NetworkGlobal.TCPClient;
@@ -22,6 +24,7 @@ import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
@@ -34,29 +37,29 @@ import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBot
  */
 
 public class DeviceListHandler {
-    private static boolean TrueOrFalse = true;
-    public static boolean setValueToDeviceContent(String deviceName, String deviceContentName, String newValue){
+    private final static int CMD_SUCCEED = 1;
+    private final static int CMD_FAILED = -1;
+    public static void setValueToDeviceContent(String deviceName, String deviceContentName, final DeviceContent deviceContent, final String newValue){
         String target = "deviceContent:" + roomName + "/" + deviceName + "/" + deviceContentName;
         ControlMessage setDeviceContentToNewValue = new ControlMessage("set", target, newValue);
+        String setValueCmd = buildJSON(setDeviceContentToNewValue);
 
-        String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
-        String ip = addr.split(":")[0];
-        int port = Integer.parseInt(addr.split(":")[1]);
-
-        String data = buildJSON(setDeviceContentToNewValue);
-        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
+        Handler handler = new Handler() {
             @Override
-            public void onFinish(String response) {
-                TrueOrFalse = true;
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case CMD_SUCCEED:
+                        deviceContent.setValue(newValue);
+                        break;
+                    case CMD_FAILED:
+                        ToastShowInBottom("Something error.\nSet new value failed.");
+                        break;
+                    default:
+                        break;
+                }
             }
-
-            @Override
-            public void onError(Exception e) {
-                TrueOrFalse = false;
-                e.printStackTrace();
-            }
-        });
-        return TrueOrFalse;
+        };
+        sendCmd(setValueCmd, handler);
     }
 
 
@@ -136,26 +139,33 @@ public class DeviceListHandler {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (newDeviceName.getText().toString().isEmpty()) {
-                    String deviceName = "new room";
-                    for (int i = 1; ; i++) {
-                        if (DataSupport.where("name = ?", deviceName).find(DeviceDB.class).isEmpty()) {
-                            newDeviceName.setText(deviceName);
-                            break;
+                    newDeviceName.setText(oldName);
+                }else {
+                    final String newName = newDeviceName.getText().toString();
+                    ControlMessage renameDeviceCmd = new ControlMessage("set", "device:" + roomName + "/" + oldName, roomName + "/" + newName);
+                    String renameDeviceJson = buildJSON(renameDeviceCmd);
+
+                    final Handler handler = new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            switch (msg.what) {
+                                case CMD_SUCCEED:
+                                 /*update list*/
+                                    deviceList.get(position).getGroupItem().setName(newName);
+                                    adapter.notifyItemChanged(position);
+                                 /* update database*/
+                                    DeviceDB deviceDB = new DeviceDB();
+                                    deviceDB.setName(newName);
+                                    deviceDB.updateAll("name = ?", oldName);
+                                    break;
+                                case CMD_FAILED:
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                        deviceName = "device " + i;
-                    }
-                }
-                String newName = newDeviceName.getText().toString();
-                ControlMessage renameDeviceCmd = new ControlMessage("set", "device:" + roomName + "/" + oldName, roomName + "/" + newName);
-                String renameDeviceJson = buildJSON(renameDeviceCmd);
-                if(sendCmd(renameDeviceJson)){
-                    /*update list*/
-                    deviceList.get(position).getGroupItem().setName(newName);
-                    adapter.notifyItemChanged(position);
-                    /* update database*/
-                    DeviceDB deviceDB = new DeviceDB();
-                    deviceDB.setName(newName);
-                    deviceDB.updateAll("name = ?", oldName);
+                    };
+                    sendCmd(renameDeviceJson, handler);
                 }
             }
         });
@@ -167,29 +177,11 @@ public class DeviceListHandler {
         renameDeviceDialog.show();
     }
 
-    private static boolean renameDevice(String data){
-        String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
-        String ip = addr.split(":")[0];
-        int port = Integer.parseInt(addr.split(":")[1]);
-        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                TrueOrFalse = true;
-            }
-            @Override
-            public void onError(Exception e) {
-                TrueOrFalse = false;
-                e.printStackTrace();
-            }
-        });
-        return TrueOrFalse;
-    }
-
 
     private static void showMoveDeviceDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
         final AlertDialog.Builder moveDeviceDialog = new AlertDialog.Builder(context);
-
-        List<String> roomList = getRestRoomList(roomName);
+        
+        List<String> roomList = getRestRoomList(roomName, UNAUTHORIZED_DEVICES);
         final String[] roomItemList = roomList.toArray(new String[roomList.size()]);
         final String deviceName = deviceList.get(position).getGroupItem().getName();
 
@@ -197,32 +189,47 @@ public class DeviceListHandler {
         moveDeviceDialog.setTitle("Move [" + deviceName + "] to");
         moveDeviceDialog.setItems(roomItemList, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, final int which) {
                 ControlMessage moveDeviceCmd = new ControlMessage("set", "device:" + roomName + "/" + deviceName, roomItemList[which] + "/" + deviceName);
                 String moveDeviceJson = buildJSON(moveDeviceCmd);
-                if(sendCmd(moveDeviceJson)){
-                    ToastShowInBottom("Move to " + roomItemList[which]);
-                }
+                Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        switch (msg.what) {
+                            case CMD_SUCCEED:
+                                ToastShowInBottom("Move to " + roomItemList[which]);
+                                break;
+                            case CMD_FAILED:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                };
+                sendCmd(moveDeviceJson, handler);
             }
         });
         moveDeviceDialog.show();
     }
 
-    private static boolean sendCmd(String data){
+    private static void sendCmd(String data, final Handler handler){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
-        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener() {
+
+        TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener(){
+            Message msg = new Message();
             @Override
             public void onFinish(String response) {
-                TrueOrFalse = true;
+                msg.what = CMD_SUCCEED;
+                handler.sendMessage(msg);
             }
             @Override
             public void onError(Exception e) {
-                TrueOrFalse = false;
+                msg.what = CMD_FAILED;
+                handler.sendMessage(msg);
                 e.printStackTrace();
             }
         });
-        return TrueOrFalse;
     }
 }

@@ -114,7 +114,7 @@ public class RoomDatabaseHandler {
         /* ************************************Room******************************** */
     }
 
-    public static List<String> getRestRoomList(String roomName){
+    public static List<String> getRestRoomList(String... roomNameList){
         List<RoomDB> roomDBList = getAllRoomDataFromDatabase();
         List<String> roomList = new ArrayList<>();
         if(roomDBList.isEmpty())
@@ -123,7 +123,7 @@ public class RoomDatabaseHandler {
         for(RoomDB roomDB : roomDBList){
             roomList.add(roomDB.getName());
         }
-        if(!roomName.equals("Home"))
+        for(String roomName : roomNameList)
             roomList.remove(roomName);
         return roomList;
     }

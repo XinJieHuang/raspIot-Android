@@ -1,9 +1,12 @@
 package org.raspiot.raspiot.Home.list;
 
 import android.app.Dialog;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,6 +34,7 @@ import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 import static org.raspiot.raspiot.RaspApplication.getContext;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 /**
@@ -38,8 +42,8 @@ import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
  */
 
 public class RoomListHandler {
-
-    private static boolean TrueOrFalse = true;
+    private final static int CMD_SUCCEED = 1;
+    private final static int CMD_FAILED = -1;
 
     /*do not use adapter.notifyDataSetChanged(); in every way I can*/
     public static void updateRoomListAndNotifyItem(List<RoomDB> roomDBList, List<Room> roomList, RoomAdapter adapter){
@@ -139,7 +143,7 @@ public class RoomListHandler {
     }
 
     private static void showRenameDialog(final Context context,final int position, final List<Room> roomList, final RoomAdapter adapter){
-        AlertDialog.Builder renameRoomDialog = new AlertDialog.Builder(context);
+        final AlertDialog.Builder renameRoomDialog = new AlertDialog.Builder(context);
 
         final String oldName = roomList.get(position).getName();
         final EditText newRoomName = new EditText(context);
@@ -163,26 +167,32 @@ public class RoomListHandler {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (newRoomName.getText().toString().isEmpty()) {
-                    String roomName = "new room";
-                    for (int i = 1; ; i++) {
-                        if (DataSupport.where("name = ?", roomName).find(RoomDB.class).isEmpty()) {
-                            newRoomName.setText(roomName);
-                            break;
+                    newRoomName.setText(oldName);
+                }else {
+                    final String newName = newRoomName.getText().toString();
+                    final ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldName, newName);
+                    String renameRoomJson = buildJSON(deleteRoomCmd);
+                    final Handler handler = new Handler() {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            switch (msg.what) {
+                                case CMD_SUCCEED:
+                                /*update list*/
+                                    roomList.get(position).setName(newName);
+                                    adapter.notifyItemChanged(position);
+                                /* update database*/
+                                    RoomDB roomDB = new RoomDB();
+                                    roomDB.setName(newName);
+                                    roomDB.updateAll("name = ?", oldName);
+                                    break;
+                                case CMD_FAILED:
+                                    ToastShowInBottom("Something error.\nRename room failed.");
+                                default:
+                                    break;
+                            }
                         }
-                        roomName = "new room " + i;
-                    }
-                }
-                String newName = newRoomName.getText().toString();
-                ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldName, newName);
-                String deleteRoomJson = buildJSON(deleteRoomCmd);
-                if(sendCmd(deleteRoomJson)){
-                    /*update list*/
-                    roomList.get(position).setName(newName);
-                    adapter.notifyItemChanged(position);
-                    /* update database*/
-                    RoomDB roomDB = new RoomDB();
-                    roomDB.setName(newName);
-                    roomDB.updateAll("name = ?", oldName);
+                    };
+                    sendCmd(renameRoomJson, handler);
                 }
             }
         });
@@ -205,11 +215,24 @@ public class RoomListHandler {
             public void onClick(DialogInterface dialog, int which) {
                 ControlMessage deleteRoomCmd = new ControlMessage("del", "room", roomName);
                 String data = buildJSON(deleteRoomCmd);
-                if (sendCmd(data)) {
-                    deleteRoomFromDatabase(roomList.get(position).getName());
-                    roomList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                }
+                Handler handler = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg){
+                        switch(msg.what){
+                            case CMD_SUCCEED:
+                                deleteRoomFromDatabase(roomList.get(position).getName());
+                                roomList.remove(position);
+                                adapter.notifyItemRemoved(position);
+                                break;
+                            case CMD_FAILED:
+                                ToastShowInBottom("Something error.\nDelete room failed.");
+
+                            default:
+                                break;
+                        }
+                    }
+                };
+                sendCmd(data, handler);
             }
         });
         delRoom.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -220,22 +243,24 @@ public class RoomListHandler {
         delRoom.show();
     }
 
-    private static boolean sendCmd(String data){
+    private static void sendCmd(String data, final Handler handler){
         String addr = getHostAddrFromDatabase(CURRENT_SERVER_ID);
         String ip = addr.split(":")[0];
         int port = Integer.parseInt(addr.split(":")[1]);
 
         TCPClient.tcpClient(ip, port, data, new ThreadCallbackListener(){
+            Message msg = new Message();
             @Override
             public void onFinish(String response) {
-                TrueOrFalse = true;
+                msg.what = CMD_SUCCEED;
+                handler.sendMessage(msg);
             }
             @Override
             public void onError(Exception e) {
-                TrueOrFalse = false;
+                msg.what = CMD_FAILED;
+                handler.sendMessage(msg);
                 e.printStackTrace();
             }
         });
-        return TrueOrFalse;
     }
 }

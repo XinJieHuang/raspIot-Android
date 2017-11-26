@@ -182,7 +182,6 @@ public class DeviceAdderActivity extends AppCompatActivity {
                         break;
                     case RESULT_CANCELED:
                         if (data != null) {
-                            // for some reason camera is not working correctly
                             ToastShowInBottom("Camera is not working correctly.");
                         }
                         break;
