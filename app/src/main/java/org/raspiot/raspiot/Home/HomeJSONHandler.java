@@ -11,8 +11,8 @@ import java.util.List;
  * Created by asus on 2017/8/27.
  */
 
-public class HomeJSONHandler {
-    public static List<RoomJSON> parseRoomJSONListWithGSON(String jsonData){
+class HomeJSONHandler {
+    static List<RoomJSON> parseRoomJSONListWithGSON(String jsonData){
         Gson gson = new Gson();
         List<RoomJSON> roomJSONList = null;
         try {                       //避免非法json数据导致程序崩溃

@@ -44,8 +44,9 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static org.raspiot.raspiot.Auth.LocalValidation.isRaspIotCloudMode;
-import static org.raspiot.raspiot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
-import static org.raspiot.raspiot.Home.HomeDatabaseHandler.parseRoomDataAndSaveToDatabase;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getAllRoomDataFromDatabase;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.parseRoomDataAndSaveToDatabase;
 import static org.raspiot.raspiot.Home.HomeJSONHandler.parseRoomJSONListWithGSON;
 import static org.raspiot.raspiot.Home.list.RoomListHandler.updateRoomListAndNotifyItem;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
@@ -277,11 +278,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initRooms(){
-        List<RoomDB> roomDBList = getAllRoomDataFromDatabase();
-        if(roomDBList.isEmpty())
-            return;
-        for(RoomDB roomDB : roomDBList){
-            Room room = new Room(roomDB.getName(), R.drawable.recyclerview_item_image);
+        List<String> roomNameList = getRestRoomList();
+        for(String roomName : roomNameList){
+            Room room = new Room(roomName, R.drawable.recyclerview_item_image);
             roomList.add(room);
         }
     }

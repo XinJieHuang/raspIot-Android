@@ -32,23 +32,23 @@ public class LocalValidation {
         return false;
     }
 
-    public static boolean isEmailValid(String email) {
+    static boolean isEmailValid(String email) {
         String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
         Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = emailPattern.matcher(email);
         return matcher.matches();
     }
 
-    public static boolean isUsernameValid(String username){
+    static boolean isUsernameValid(String username){
         return username.length() > 3 && username.length() < 17;
     }
 
-    public static boolean isPasswordValid(String password) {
+    static boolean isPasswordValid(String password) {
         /* password's length must be between 6 and 16 characters long! */
         return password.length() > 5 && password.length() < 17;
     }
 
-    public static boolean isPasswordEqual(String password1, String password2){
+    static boolean isPasswordEqual(String password1, String password2){
         return password1.equals(password2);
     }
 }

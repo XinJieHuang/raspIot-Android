@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,21 +24,21 @@ import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 import java.util.List;
 
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
-import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 
 /**
  * Created by asus on 2017/9/9.
  */
 
-public class DeviceListHandler {
+class DeviceListHandler {
     private final static int CMD_SUCCEED = 1;
     private final static int CMD_FAILED = -1;
-    public static void setValueToDeviceContent(String deviceName, String deviceContentName, final DeviceContent deviceContent, final String newValue){
+    static void setValueToDeviceContent(String deviceName, String deviceContentName, final DeviceContent deviceContent, final String newValue){
         String target = "deviceContent:" + roomName + "/" + deviceName + "/" + deviceContentName;
         ControlMessage setDeviceContentToNewValue = new ControlMessage("set", target, newValue);
         String setValueCmd = buildJSON(setDeviceContentToNewValue);
@@ -63,7 +62,7 @@ public class DeviceListHandler {
     }
 
 
-    public static void showBottomDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
+    static void showBottomDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
         final Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.device_bottom_dialog_content, null);
         bottomDialog.setContentView(contentView);
@@ -180,7 +179,7 @@ public class DeviceListHandler {
 
     private static void showMoveDeviceDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
         final AlertDialog.Builder moveDeviceDialog = new AlertDialog.Builder(context);
-        
+
         List<String> roomList = getRestRoomList(roomName, UNAUTHORIZED_DEVICES);
         final String[] roomItemList = roomList.toArray(new String[roomList.size()]);
         final String deviceName = deviceList.get(position).getGroupItem().getName();

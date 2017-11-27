@@ -1,7 +1,6 @@
 package org.raspiot.raspiot.Home.list;
 
 import android.app.Dialog;
-import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.litepal.crud.DataSupport;
 import org.raspiot.raspiot.R;
 import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
 import org.raspiot.raspiot.JsonGlobal.ControlMessage;
@@ -31,7 +29,7 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURREN
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
-import static org.raspiot.raspiot.Home.HomeDatabaseHandler.deleteRoomFromDatabase;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 import static org.raspiot.raspiot.RaspApplication.getContext;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
@@ -88,7 +86,7 @@ public class RoomListHandler {
         }
     }
 
-    public static void getIntoRoom(String roomName){
+    static void getIntoRoom(String roomName){
         Context context = getContext();
         Intent intent = new Intent(context, RoomActivity.class);
         intent.putExtra(ROOM_NAME, roomName);
@@ -97,7 +95,7 @@ public class RoomListHandler {
     }
 
 
-    protected static void showBottomDialog(final Context context, final int position, final List<Room> roomList, final RoomAdapter adapter){
+    static void showBottomDialog(final Context context, final int position, final List<Room> roomList, final RoomAdapter adapter){
         final String roomName = roomList.get(position).getName();
         final Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
         View contentView = LayoutInflater.from(context).inflate(R.layout.home_bottom_dialog_content, null);
@@ -226,7 +224,6 @@ public class RoomListHandler {
                                 break;
                             case CMD_FAILED:
                                 ToastShowInBottom("Something error.\nDelete room failed.");
-
                             default:
                                 break;
                         }

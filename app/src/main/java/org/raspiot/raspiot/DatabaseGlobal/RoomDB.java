@@ -31,10 +31,6 @@ public class RoomDB extends DataSupport{
         this.name = name;
     }
 
-    public List<DeviceDB> getDeviceDBList() {
-        return deviceDBList;
-    }
-
     public void setDeviceDBList(List<DeviceDB> deviceDBList) {
         this.deviceDBList = deviceDBList;
     }

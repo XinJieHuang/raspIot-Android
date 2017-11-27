@@ -8,9 +8,9 @@ import org.raspiot.raspiot.Room.json.RoomJSON;
  * Created by asus on 2017/8/27.
  */
 
-public class RoomJSONHandler {
+class RoomJSONHandler {
 
-    protected static RoomJSON parseJSONWithGSON(String jsonData){
+    static RoomJSON parseJSONWithGSON(String jsonData){
         Gson gson = new Gson();
         RoomJSON roomJSON = null;
         try {                       //避免非法json数据导致程序崩溃

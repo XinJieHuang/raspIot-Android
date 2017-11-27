@@ -11,18 +11,18 @@ import java.util.List;
  * Created by asus on 2017/8/27.
  */
 
-public class HomeDatabaseHandler {
-    protected static void parseRoomDataAndSaveToDatabase(List<RoomJSON> roomJSONList) {
+public class RoomDatabaseHandler {
+    static void parseRoomDataAndSaveToDatabase(List<RoomJSON> roomJSONList) {
         if(roomJSONList == null)
             return;
 
         /* ***     get all room name from roomJSONList   *** */
         List<String> roomJSONNameList = new ArrayList<>();
-        List<String> roomJSONnameList0 = new ArrayList<>();
+        List<String> roomJSONNameList0 = new ArrayList<>();
         if(!roomJSONList.isEmpty())
             for( RoomJSON roomJSON : roomJSONList)
                 roomJSONNameList.add(roomJSON.getName());
-        roomJSONnameList0.addAll(roomJSONNameList);
+        roomJSONNameList0.addAll(roomJSONNameList);
 
         /* ***     get all room name from roomDBList   *** */
         List<String> roomDBNameList = new ArrayList<>();
@@ -34,11 +34,11 @@ public class HomeDatabaseHandler {
         /* roomJSONNameList just left new room  */
         roomJSONNameList.removeAll(roomDBNameList);
         /* roomDBNameList just left those room that should be deleted*/
-        roomDBNameList.removeAll(roomJSONnameList0);
+        roomDBNameList.removeAll(roomJSONNameList0);
 
         if(!roomJSONNameList.isEmpty())
             for (String roomName : roomJSONNameList){
-                    RoomJSON roomJSON = roomJSONList.get(roomJSONnameList0.indexOf(roomName));
+                    RoomJSON roomJSON = roomJSONList.get(roomJSONNameList0.indexOf(roomName));
                     RoomDB roomDB = new RoomDB();
                     roomDB.setName(roomJSON.getName());
                     roomDB.setUpdateTime(roomJSON.getUpdateTime());
@@ -50,10 +50,22 @@ public class HomeDatabaseHandler {
             }
     }
 
+    public static List<String> getRestRoomList(String... roomNameList){
+        List<RoomDB> roomDBList = getAllRoomDataFromDatabase();
+        List<String> roomList = new ArrayList<>();
+        if(roomDBList == null)
+            return roomList;
+        for(RoomDB roomDB : roomDBList){
+            roomList.add(roomDB.getName());
+        }
+        for(String roomName : roomNameList)
+            roomList.remove(roomName);
+        return roomList;
+    }
+
 
     public static List<RoomDB> getAllRoomDataFromDatabase(){
-        List<RoomDB> roomDBList = DataSupport.findAll(RoomDB.class);
-        return roomDBList;
+        return DataSupport.findAll(RoomDB.class);
     }
 
 

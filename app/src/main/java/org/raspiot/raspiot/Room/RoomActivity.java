@@ -35,9 +35,9 @@ import okhttp3.Response;
 
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
-import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getDeviceDataFromDatabase;
-import static org.raspiot.raspiot.Room.RoomDatabaseHandler.getLastUpdateTimeFromDatabase;
-import static org.raspiot.raspiot.Room.RoomDatabaseHandler.parseDeviceDataAndSaveToDatabase;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getDeviceDataFromDatabase;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getLastUpdateTimeFromDatabase;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.parseDeviceDataAndSaveToDatabase;
 import static org.raspiot.raspiot.Room.RoomJSONHandler.parseJSONWithGSON;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CLOUD_SERVER_ID;

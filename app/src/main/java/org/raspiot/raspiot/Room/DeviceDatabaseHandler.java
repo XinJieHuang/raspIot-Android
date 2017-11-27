@@ -15,7 +15,7 @@ import org.raspiot.raspiot.Room.list.DeviceTitle;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspiot.Home.HomeDatabaseHandler.getAllRoomDataFromDatabase;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getAllRoomDataFromDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
 
@@ -23,8 +23,8 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDA
  * Created by asus on 2017/8/26.
  */
 
-public class RoomDatabaseHandler {
-    protected static void getDeviceDataFromDatabase(List<Device> deviceList){
+class DeviceDatabaseHandler {
+    static void getDeviceDataFromDatabase(List<Device> deviceList){
         List<DeviceDB> deviceDBList;
         try{
             deviceDBList = DataSupport           //连缀查询
@@ -50,18 +50,8 @@ public class RoomDatabaseHandler {
         }
     }
 
-    protected static String getLastUpdateTimeFromDatabase(){
-        RoomDB roomDB = DataSupport
-                .where("name = ?", roomName)
-                .findFirst(RoomDB.class);
-        if(roomDB != null)
-            return roomDB.getUpdateTime();
-        else
-            return STANDARD_INITIAL_TIME; //2015-12-17 22:22:00
-    }
 
-
-    protected static void parseDeviceDataAndSaveToDatabase(RoomJSON roomJSON){
+    static void parseDeviceDataAndSaveToDatabase(RoomJSON roomJSON){
         if(roomJSON == null || !roomJSON.getName().equals(roomName))
             return;
         /* *******************************Room********************************** */
@@ -114,17 +104,13 @@ public class RoomDatabaseHandler {
         /* ************************************Room******************************** */
     }
 
-    public static List<String> getRestRoomList(String... roomNameList){
-        List<RoomDB> roomDBList = getAllRoomDataFromDatabase();
-        List<String> roomList = new ArrayList<>();
-        if(roomDBList.isEmpty())
-            return roomList;
-        int i = 0;
-        for(RoomDB roomDB : roomDBList){
-            roomList.add(roomDB.getName());
-        }
-        for(String roomName : roomNameList)
-            roomList.remove(roomName);
-        return roomList;
+    static String getLastUpdateTimeFromDatabase(){
+        RoomDB roomDB = DataSupport
+                .where("name = ?", roomName)
+                .findFirst(RoomDB.class);
+        if(roomDB != null)
+            return roomDB.getUpdateTime();
+        else
+            return STANDARD_INITIAL_TIME; //2015-12-17 22:22:00
     }
 }

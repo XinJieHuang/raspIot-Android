@@ -10,7 +10,7 @@ import okhttp3.RequestBody;
  */
 
 public class HttpUtil {
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static void sendOkHttpRequest(String address, String cmdJson, okhttp3.Callback callback) {
                     OkHttpClient client = new OkHttpClient();
                     RequestBody body = RequestBody.create(JSON, cmdJson);
