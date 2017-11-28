@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
-    <dbname value="raspIot"></dbname>
+    <dbname value="raspiot"></dbname>
     <version value="1"> </version>
     <list>
         <mapping class="org.raspiot.raspiot.DatabaseGlobal.RoomDB"></mapping>

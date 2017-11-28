@@ -15,7 +15,6 @@ import org.raspiot.raspiot.Room.list.DeviceTitle;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getAllRoomDataFromDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDARD_INITIAL_TIME;
 
@@ -23,7 +22,7 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.STANDA
  * Created by asus on 2017/8/26.
  */
 
-class DeviceDatabaseHandler {
+public class DeviceDatabaseHandler {
     static void getDeviceDataFromDatabase(List<Device> deviceList){
         List<DeviceDB> deviceDBList;
         try{
@@ -106,11 +105,26 @@ class DeviceDatabaseHandler {
 
     static String getLastUpdateTimeFromDatabase(){
         RoomDB roomDB = DataSupport
-                .where("name = ?", roomName)
-                .findFirst(RoomDB.class);
+                        .where("name = ?", roomName)
+                        .findFirst(RoomDB.class);
         if(roomDB != null)
             return roomDB.getUpdateTime();
         else
             return STANDARD_INITIAL_TIME; //2015-12-17 22:22:00
+    }
+
+    public static void moveDeviceInDatabase(String oldRoom, String newRoom, String device){
+        RoomDB oldRoomDB = DataSupport
+                            .where("name = ?", oldRoom)
+                            .findFirst(RoomDB.class);
+        RoomDB newRoomDB = DataSupport
+                            .where("name = ?", newRoom)
+                            .findFirst(RoomDB.class);
+        DeviceDB deviceDB = DataSupport
+                            .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
+                            .findFirst(DeviceDB.class);
+        // 修改外键
+        deviceDB.setRoomDB(newRoomDB);
+        deviceDB.save();
     }
 }
