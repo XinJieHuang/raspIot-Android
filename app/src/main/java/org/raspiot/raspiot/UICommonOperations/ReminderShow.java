@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.raspiot.raspiot.R;
+
 import static org.raspiot.raspiot.RaspApplication.getContext;
 
 /**
@@ -42,6 +44,7 @@ public class ReminderShow {
     public static void showWarning(Context context, String msg){
         AlertDialog.Builder warning = new AlertDialog.Builder(context);
         warning.setCancelable(false);
+        warning.setIcon(R.drawable.dialog_ic_warning);
         warning.setTitle("Warning");
         warning.setMessage(msg);
         warning.setPositiveButton("OK", new DialogInterface.OnClickListener() {

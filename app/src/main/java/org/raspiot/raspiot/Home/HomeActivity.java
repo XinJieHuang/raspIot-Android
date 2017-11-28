@@ -57,6 +57,7 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_S
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
+import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -307,25 +308,18 @@ public class HomeActivity extends AppCompatActivity {
         addRoomDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (newRoomName.getText().toString().isEmpty()) {
-                            String roomName = "new room";
-                            for (int i = 1; ; i++) {
-                                if (DataSupport.where("name = ?", roomName).find(RoomDB.class).isEmpty()) {
-                                    newRoomName.setText(roomName);
-                                    break;
-                                }
-                                roomName = "new room " + i;
-                            }
+                        String newName = newRoomName.getText().toString();
+                        if (newName.isEmpty())
+                            ToastShowInBottom("Room name can't be empty.");
+                        else if (getRestRoomList().contains(newName))
+                            ToastShowInBottom(newName + " is already exists.");
+                        else{
+                            ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
+                            sendRequestWithSocket(buildJSON(addNewRoomCmd));
                         }
-                        ControlMessage addNewRoomCmd = new ControlMessage("add", "room", newRoomName.getText().toString());
-                        sendRequestWithSocket(buildJSON(addNewRoomCmd));
                     }
                 });
-        addRoomDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+        addRoomDialog.setNegativeButton("Cancel", null);
         addRoomDialog.show();
     }
     /*********************Initialize end*****************************/

@@ -113,18 +113,35 @@ public class DeviceDatabaseHandler {
             return STANDARD_INITIAL_TIME; //2015-12-17 22:22:00
     }
 
-    public static void moveDeviceInDatabase(String oldRoom, String newRoom, String device){
+    public static void moveDevicesInDatabase(String oldRoom, String newRoom, String... devices){
         RoomDB oldRoomDB = DataSupport
                             .where("name = ?", oldRoom)
                             .findFirst(RoomDB.class);
         RoomDB newRoomDB = DataSupport
                             .where("name = ?", newRoom)
                             .findFirst(RoomDB.class);
-        DeviceDB deviceDB = DataSupport
-                            .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
-                            .findFirst(DeviceDB.class);
-        // 修改外键
-        deviceDB.setRoomDB(newRoomDB);
-        deviceDB.save();
+        for(String device : devices) {
+            DeviceDB deviceDB = DataSupport
+                    .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
+                    .findFirst(DeviceDB.class);
+            // 修改外键
+            deviceDB.setRoomDB(newRoomDB);
+            deviceDB.save();
+        }
+    }
+
+    public static List<String> getAllDeviceNameFromDatabase(String roomName){
+        RoomDB roomDB = DataSupport
+                        .where("name = ?", roomName)
+                        .findFirst(RoomDB.class);
+        List<DeviceDB> deviceDBList = DataSupport
+                                        .where("roomdb_id = ?", Integer.toString(roomDB.getId()))
+                                        .find(DeviceDB.class);
+        List<String> deviceList = new ArrayList<>();
+        if(deviceDBList == null)
+            return deviceList;
+        for(DeviceDB deviceDB : deviceDBList)
+            deviceList.add(deviceDB.getName());
+        return deviceList;
     }
 }

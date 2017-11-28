@@ -30,8 +30,11 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTH
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
 import static org.raspiot.raspiot.RaspApplication.getContext;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getAllDeviceNameFromDatabase;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDevicesInDatabase;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.ToastShowInBottom;
 import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
@@ -164,10 +167,12 @@ public class RoomListHandler {
         renameRoomDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (newRoomName.getText().toString().isEmpty()) {
-                    newRoomName.setText(oldName);
-                }else {
-                    final String newName = newRoomName.getText().toString();
+                final String newName = newRoomName.getText().toString();
+                if (newName.isEmpty())
+                    ToastShowInBottom("Room name can't be empty.");
+                else if(getRestRoomList().contains(newName))
+                    ToastShowInBottom(newName + " is already exists.");
+                else {
                     final ControlMessage deleteRoomCmd = new ControlMessage("set", "room:" + oldName, newName);
                     String renameRoomJson = buildJSON(deleteRoomCmd);
                     final Handler handler = new Handler() {
@@ -194,11 +199,7 @@ public class RoomListHandler {
                 }
             }
         });
-        renameRoomDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        renameRoomDialog.setNegativeButton("Cancel", null);
         renameRoomDialog.show();
     }
 
@@ -218,6 +219,8 @@ public class RoomListHandler {
                     public void handleMessage(Message msg){
                         switch(msg.what){
                             case CMD_SUCCEED:
+                                List<String> deviceList = getAllDeviceNameFromDatabase(roomName);
+                                moveDevicesInDatabase(roomName, UNAUTHORIZED_DEVICES, deviceList.toArray(new String[deviceList.size()]));
                                 deleteRoomFromDatabase(roomList.get(position).getName());
                                 roomList.remove(position);
                                 adapter.notifyItemRemoved(position);

@@ -25,7 +25,7 @@ import java.util.List;
 
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
-import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDeviceInDatabase;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDevicesInDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
@@ -198,7 +198,7 @@ class DeviceListHandler {
                         switch (msg.what) {
                             case CMD_SUCCEED:
                                 ToastShowInBottom("Move to " + roomItemList[which]);
-                                moveDeviceInDatabase(roomName, roomItemList[which], deviceName);
+                                moveDevicesInDatabase(roomName, roomItemList[which], deviceName);
                                 deviceList.remove(position);
                                 adapter.notifyItemRemoved(position);
                                 break;
