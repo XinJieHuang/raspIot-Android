@@ -23,7 +23,6 @@ import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
-import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDevicesInDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
@@ -169,11 +168,7 @@ class DeviceListHandler {
                 }
             }
         });
-        renameDeviceDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        renameDeviceDialog.setNegativeButton("Cancel", null);
         renameDeviceDialog.show();
     }
 
@@ -181,7 +176,11 @@ class DeviceListHandler {
     private static void showMoveDeviceDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
         final AlertDialog.Builder moveDeviceDialog = new AlertDialog.Builder(context);
 
-        List<String> roomList = getRestRoomList(roomName, UNAUTHORIZED_DEVICES);
+        List<String> roomList = getRestRoomList(roomName);
+        if(roomList.isEmpty()){
+            ToastShowInBottom("No other room.");
+            return;
+        }
         final String[] roomItemList = roomList.toArray(new String[roomList.size()]);
         final String deviceName = deviceList.get(position).getGroupItem().getName();
 
@@ -197,7 +196,6 @@ class DeviceListHandler {
                     public void handleMessage(Message msg) {
                         switch (msg.what) {
                             case CMD_SUCCEED:
-                                ToastShowInBottom("Move to " + roomItemList[which]);
                                 moveDevicesInDatabase(roomName, roomItemList[which], deviceName);
                                 deviceList.remove(position);
                                 adapter.notifyItemRemoved(position);

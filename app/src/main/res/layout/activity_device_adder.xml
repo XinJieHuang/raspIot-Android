@@ -60,8 +60,8 @@
 
         <Button
             android:id="@+id/btn_device_adder_qr_code"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginRight="18dp"
             android:layout_marginEnd="18dp"
             android:background="@drawable/qr_code_scan" />

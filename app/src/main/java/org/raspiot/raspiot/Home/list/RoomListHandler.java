@@ -26,7 +26,7 @@ import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 import java.util.List;
 
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNGROUPED_DEVICES;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
@@ -79,9 +79,7 @@ public class RoomListHandler {
             /* Only when i < min(roomList.size(), roomJSONList.size()) */
             else {
                 Room room = new Room(roomDBList.get(i).getName(), R.drawable.recyclerview_item_image);
-                if (roomList.get(i).equals(room))
-                    continue;
-                else {
+                if (!roomList.get(i).equals(room)) {
                     roomList.set(i, room);
                     adapter.notifyItemChanged(i);
                 }
@@ -118,8 +116,8 @@ public class RoomListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                if(roomName.equals(UNAUTHORIZED_DEVICES))
-                    showWarning(context, UNAUTHORIZED_DEVICES + " can't be renamed.You can close it in Settings.");
+                if(roomName.equals(UNGROUPED_DEVICES))
+                    showWarning(context, UNGROUPED_DEVICES + " can't be renamed.");
                 else
                     showRenameDialog(context, position, roomList, adapter);
             }
@@ -128,8 +126,8 @@ public class RoomListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                if(roomName.equals(UNAUTHORIZED_DEVICES))
-                    showWarning(context, UNAUTHORIZED_DEVICES + " can't be deleted. You can close it in Settings.");
+                if(roomName.equals(UNGROUPED_DEVICES))
+                    showWarning(context, UNGROUPED_DEVICES + " can't be deleted.");
                 else
                     showDelRoomDialog(context, position, roomList, adapter);
             }
@@ -208,7 +206,7 @@ public class RoomListHandler {
         final String roomName = roomList.get(position).getName();
         delRoom.setCancelable(false);
         delRoom.setTitle("Delete " + roomName);
-        delRoom.setMessage("All devices of " + roomName + " will be moved to " + UNAUTHORIZED_DEVICES + ".");
+        delRoom.setMessage("All devices of " + roomName + " will be moved to " + UNGROUPED_DEVICES + ".");
         delRoom.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -220,7 +218,7 @@ public class RoomListHandler {
                         switch(msg.what){
                             case CMD_SUCCEED:
                                 List<String> deviceList = getAllDeviceNameFromDatabase(roomName);
-                                moveDevicesInDatabase(roomName, UNAUTHORIZED_DEVICES, deviceList.toArray(new String[deviceList.size()]));
+                                moveDevicesInDatabase(roomName, UNGROUPED_DEVICES, deviceList.toArray(new String[deviceList.size()]));
                                 deleteRoomFromDatabase(roomList.get(position).getName());
                                 roomList.remove(position);
                                 adapter.notifyItemRemoved(position);
@@ -235,11 +233,7 @@ public class RoomListHandler {
                 sendCmd(data, handler);
             }
         });
-        delRoom.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        delRoom.setNegativeButton("Cancel", null);
         delRoom.show();
     }
 

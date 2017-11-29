@@ -120,8 +120,8 @@ public class DeviceAdderActivity extends AppCompatActivity {
     private void initUIWidget(){
         editDeviceUuid = (EditText) findViewById(R.id.edit_device_adder_device_uuid);
         editDeviceName = (EditText) findViewById(R.id.edit_device_adder_device_name);
-        Button btn = (Button) findViewById(R.id.btn_device_adder_qr_code);
-        btn.setOnClickListener(new View.OnClickListener(){
+        Button btnScanQRCode = (Button) findViewById(R.id.btn_device_adder_qr_code);
+        btnScanQRCode.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 //启动 扫描
@@ -174,8 +174,11 @@ public class DeviceAdderActivity extends AppCompatActivity {
                     case RESULT_OK:
                         try {
                             String[] QRData = data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT).split(";");
-                            editDeviceUuid.setText(QRData[0]);
+                            editDeviceUuid.setText(QRData[0].toUpperCase());    // use A-Z, not a-z
                             editDeviceName.setText(QRData[1]);
+                            /* set focus to editDeviceName */
+                            editDeviceName.requestFocus();
+                            editDeviceName.setFocusableInTouchMode(true);
                         }catch (Exception e){
                             e.printStackTrace();
                         }

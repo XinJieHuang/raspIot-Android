@@ -33,7 +33,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNAUTHORIZED_DEVICES;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNGROUPED_DEVICES;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getDeviceDataFromDatabase;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getLastUpdateTimeFromDatabase;
@@ -75,7 +75,7 @@ public class RoomActivity extends AppCompatActivity {
     //Toolbar右上角菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        if(!roomName.equals(UNAUTHORIZED_DEVICES))
+        if(!roomName.equals(UNGROUPED_DEVICES))
             getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
         return true;
     }
