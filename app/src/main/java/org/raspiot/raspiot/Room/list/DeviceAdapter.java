@@ -158,10 +158,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 }
             });
-            /*OnLongClickListener*/
+            /* OnLongClickListener */
             groupItemViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    int groupItemIndex = itemStatus.getGroupItemIndex();
+                    if(groupItemStatus.get(groupItemIndex)){
+                        groupItemStatus.set(groupItemIndex, false);
+                        notifyItemRangeRemoved(groupItemViewHolder.getAdapterPosition() + 1, device.getSubItems().size());
+                    }
                     int position = groupItemViewHolder.getAdapterPosition();
                     showBottomDialog(mContext, position, mDeviceList, DeviceAdapter.this);
                     return true;
@@ -217,10 +222,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private boolean stringToBoolean(String string){
-        if(string.equals("true"))
-            return true;
-        else
-            return false;
+        return string.equals("true");
     }
 
     @Override
@@ -254,8 +256,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private ItemStatus getItemStatusByPosition(int position){
         ItemStatus itemStatus = new ItemStatus();
 
-        int i = 0;
-        int count = 0;
+        int i = 0, count = 0;
 
         for(i = 0; i < groupItemStatus.size(); i++){
             if(count == position){
