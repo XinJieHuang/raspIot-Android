@@ -121,7 +121,7 @@ public class DeviceDatabaseHandler {
                             .where("name = ?", newRoom)
                             .findFirst(RoomDB.class);
         for(String device : devices) {
-            DeviceDB deviceDB = DataSupport.select("id")
+            DeviceDB deviceDB = DataSupport
                     .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
                     .findFirst(DeviceDB.class, true);
             // 修改外键
