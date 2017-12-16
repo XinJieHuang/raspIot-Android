@@ -114,16 +114,16 @@ public class DeviceDatabaseHandler {
     }
 
     public static void moveDevicesInDatabase(String oldRoom, String newRoom, String... devices){
-        RoomDB oldRoomDB = DataSupport
+        RoomDB oldRoomDB = DataSupport.select("id")
                             .where("name = ?", oldRoom)
                             .findFirst(RoomDB.class);
-        RoomDB newRoomDB = DataSupport
+        RoomDB newRoomDB = DataSupport.select("id")
                             .where("name = ?", newRoom)
                             .findFirst(RoomDB.class);
         for(String device : devices) {
-            DeviceDB deviceDB = DataSupport
+            DeviceDB deviceDB = DataSupport.select("id")
                     .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
-                    .findFirst(DeviceDB.class);
+                    .findFirst(DeviceDB.class, true);
             // 修改外键
             deviceDB.setRoomDB(newRoomDB);
             deviceDB.save();
