@@ -71,9 +71,12 @@ public class DeviceDatabaseHandler {
             DeviceDB deviceDB = new DeviceDB();
             deviceDB.setName(deviceJSON.getName());
             deviceDB.setUuid(deviceJSON.getUuid());
-            deviceDB.setStatus(deviceJSON.getStatus());
+            if(!deviceJSON.getStatus())   /*LitePal not support update a value to default*/
+                deviceDB.setToDefault("status");
+            else
+                deviceDB.setStatus(deviceJSON.getStatus());
             deviceDB.setId(0);
-            if((deviceDBCheck = DataSupport.where("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId())).findFirst(DeviceDB.class)) != null) {
+            if((deviceDBCheck = DataSupport.where("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId())).findFirst(DeviceDB.class, true)) != null) {
                 deviceDB.setId(deviceDBCheck.getId());
             }
             /* if device's status is false, means couldn't get deviceContent from iotServer*/
@@ -91,9 +94,9 @@ public class DeviceDatabaseHandler {
                 }
                 /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 deviceDB.setDeviceContentDBList(deviceContentDBList);
+            } else {
+                deviceDB.setDeviceContentDBList(deviceDBCheck.getDeviceContentDBList());
             }
-            if(!deviceDB.getStatus())   /*LitePal not support set a value to default*/
-                deviceDB.setToDefault("status");
             deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
             deviceDBList.add(deviceDB);
         }
