@@ -94,7 +94,8 @@ public class DeviceDatabaseHandler {
                 }
                 /*%%%%%%%%%%%%%%%%%%%%%%%%All DeviceContent%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 deviceDB.setDeviceContentDBList(deviceContentDBList);
-            } else {
+            }
+            else if(!deviceDB.getStatus() && deviceDBCheck != null) {
                 deviceDB.setDeviceContentDBList(deviceDBCheck.getDeviceContentDBList());
             }
             deviceDB.saveOrUpdate("name = ? and roomdb_id = ?", deviceDB.getName(), Integer.toString(roomDB.getId()));
