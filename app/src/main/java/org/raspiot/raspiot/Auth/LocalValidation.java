@@ -20,12 +20,12 @@ public class LocalValidation {
 
     public static boolean isLogInNeed(){
         UserInfoDB userInfo = getCurrentUserInfo();
-        if(userInfo.getId() == DEFAULT_USER_INFO_ID && isRaspIotCloudMode())
+        if(userInfo.getId() == DEFAULT_USER_INFO_ID && isRaspiotCloudMode())
             return true;
         return false;
     }
 
-    public static boolean isRaspIotCloudMode(){
+    public static boolean isRaspiotCloudMode(){
         if(CurrentHostModeIsCloudServerMode())
             if(getHostAddrFromDatabase(CURRENT_SERVER_ID).equals(DEFAULT_CLOUD_SERVER_ADDR))
                 return true;

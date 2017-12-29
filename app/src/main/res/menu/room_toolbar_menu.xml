@@ -2,7 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/room_add_device"
+        android:id="@+id/devices_refresh"
+        android:icon="@drawable/toolbar_icon_refresh"
+        android:title="Refresh"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/device_add"
         android:icon="@drawable/toolbar_icon_add"
         android:title="Add device"
         app:showAsAction="always"/>

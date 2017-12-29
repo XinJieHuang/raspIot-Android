@@ -33,7 +33,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNGROUPED_DEVICES;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getDeviceDataFromDatabase;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.getLastUpdateTimeFromDatabase;
@@ -75,8 +74,7 @@ public class RoomActivity extends AppCompatActivity {
     //Toolbar右上角菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        if(!roomName.equals(UNGROUPED_DEVICES))
-            getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
         return true;
     }
 
@@ -86,10 +84,14 @@ public class RoomActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.room_add_device:
+            case R.id.device_add:
                 Intent intent_deviceAdder= new Intent(RoomActivity.this, DeviceAdderActivity.class);
                 intent_deviceAdder.putExtra(ROOM_NAME, roomName);
                 startActivity(intent_deviceAdder);
+                break;
+            case R.id.devices_refresh:
+                swipeRefresh.setRefreshing(true);
+                refreshDevices();
                 break;
             default:
         }
@@ -134,7 +136,7 @@ public class RoomActivity extends AppCompatActivity {
 
 
 
-    private void refreshdevices(){
+    private void refreshDevices(){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -190,7 +192,7 @@ public class RoomActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh(){
-                refreshdevices();
+                refreshDevices();
             }
         });
 

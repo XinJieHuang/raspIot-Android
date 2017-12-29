@@ -27,7 +27,6 @@ import org.raspiot.raspiot.Auth.LogInActivity;
 import org.raspiot.raspiot.R;
 import org.raspiot.raspiot.Room.json.RoomJSON;
 import org.raspiot.raspiot.Settings.SettingsActivity;
-import org.raspiot.raspiot.DatabaseGlobal.RoomDB;
 import org.raspiot.raspiot.Home.list.Room;
 import org.raspiot.raspiot.Home.list.RoomAdapter;
 import org.raspiot.raspiot.DatabaseGlobal.UserInfoDB;
@@ -43,7 +42,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static org.raspiot.raspiot.Auth.LocalValidation.isRaspIotCloudMode;
+import static org.raspiot.raspiot.Auth.LocalValidation.isRaspiotCloudMode;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getAllRoomDataFromDatabase;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.parseRoomDataAndSaveToDatabase;
@@ -57,7 +56,6 @@ import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.RASP_S
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getCurrentUserInfo;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.JsonGlobal.JsonCommonOperations.buildJSON;
-import static org.raspiot.raspiot.UICommonOperations.ReminderShow.showWarning;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -265,7 +263,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.nav_log_out:
-                        if(userInfo.getId() != DEFAULT_USER_INFO_ID && isRaspIotCloudMode()) {
+                        if(userInfo.getId() != DEFAULT_USER_INFO_ID && isRaspiotCloudMode()) {
                             DataSupport.delete(UserInfoDB.class, userInfo.getId());
                             Intent intent_login = new Intent(HomeActivity.this, LogInActivity.class);
                             startActivity(intent_login);

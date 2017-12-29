@@ -26,7 +26,7 @@ import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 import java.util.List;
 
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
-import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.UNGROUPED_DEVICES;
+import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.MY_DEVICES;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.getHostAddrFromDatabase;
 import static org.raspiot.raspiot.Home.HomeActivity.ROOM_NAME;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
@@ -116,8 +116,8 @@ public class RoomListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                if(roomName.equals(UNGROUPED_DEVICES))
-                    showWarning(context, UNGROUPED_DEVICES + " can't be renamed.");
+                if(roomName.equals(MY_DEVICES))
+                    showWarning(context, "Default group can't be renamed.");
                 else
                     showRenameDialog(context, position, roomList, adapter);
             }
@@ -126,8 +126,8 @@ public class RoomListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                if(roomName.equals(UNGROUPED_DEVICES))
-                    showWarning(context, UNGROUPED_DEVICES + " can't be deleted.");
+                if(roomName.equals(MY_DEVICES))
+                    showWarning(context, "Default group can't be deleted.");
                 else
                     showDelRoomDialog(context, position, roomList, adapter);
             }
@@ -206,7 +206,7 @@ public class RoomListHandler {
         final String roomName = roomList.get(position).getName();
         delRoom.setCancelable(false);
         delRoom.setTitle("Delete " + roomName);
-        delRoom.setMessage("All devices of " + roomName + " will be moved to " + UNGROUPED_DEVICES + ".");
+        delRoom.setMessage("All devices of " + roomName + " will be moved to " + MY_DEVICES + ".");
         delRoom.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -218,7 +218,7 @@ public class RoomListHandler {
                         switch(msg.what){
                             case CMD_SUCCEED:
                                 List<String> deviceList = getAllDeviceNameFromDatabase(roomName);
-                                moveDevicesInDatabase(roomName, UNGROUPED_DEVICES, deviceList.toArray(new String[deviceList.size()]));
+                                moveDevicesInDatabase(roomName, MY_DEVICES, deviceList.toArray(new String[deviceList.size()]));
                                 deleteRoomFromDatabase(roomList.get(position).getName());
                                 roomList.remove(position);
                                 adapter.notifyItemRemoved(position);
