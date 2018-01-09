@@ -27,9 +27,9 @@
                 android:layout_width="match_parent"
                 android:gravity="center|start"
                 android:layout_height="40dp"
-                android:background="#faa6a6"
+                android:background="#fdbdbd"
                 android:visibility="gone"
-                android:text="  Doesn't connect with server, please check!" />
+                android:text="  Doesn't connect with server, please check." />
 
         </android.support.design.widget.AppBarLayout>
 

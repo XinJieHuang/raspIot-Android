@@ -44,7 +44,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="3dp"
             android:layout_marginEnd="3dp"
-            android:text="    uuid:"
+            android:text="uuid:  "
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
 
@@ -84,7 +84,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="3dp"
             android:layout_marginEnd="3dp"
-            android:text="device:"
+            android:text="name:"
             android:textSize="18sp"
             android:textColor="@android:color/black"/>
 
