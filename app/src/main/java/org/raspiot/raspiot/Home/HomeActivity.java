@@ -2,6 +2,7 @@ package org.raspiot.raspiot.Home;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ProviderInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     private UserInfoDB userInfo;
     private String dataFromNetworkResponse;
     private DrawerLayout mDrawerLayout;
+    private TextView connectHint;
     private List<Room> roomList = new ArrayList<>();
     private RoomAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
@@ -71,6 +74,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int NETWORK_ERROR = -1;
     private static final int GET_ROOM_LIST_SUCCEED = 1;
     private static final int CMD_ERROR = 2;
+    private static final int HOST_CONFIRM = 3;
 
     public static final String ROOM_NAME = "room_name";
 
@@ -79,13 +83,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        /*Toolbar*/
-        initToolbar();
-        initNavigationView();
-
-        /*Main list*/
-        initRooms();//初始化房间数据
-        initRecyclerView();
+        initUIWidget();
     }
 
     //Toolbar右上角菜单
@@ -112,6 +110,7 @@ public class HomeActivity extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            connectHint.setVisibility(View.GONE);
             switch (msg.what){
                 case GET_ROOM_LIST_SUCCEED:   //FROM SERVER
                     /* 获取消息 更新UI */
@@ -133,7 +132,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 case NETWORK_ERROR:
                     swipeRefresh.setRefreshing(false);
-                    ToastShowInBottom("Network error.");
+                    connectHint.setVisibility(View.VISIBLE);
                     break;
 
                 default:
@@ -174,27 +173,33 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    private void checkServicesWithNetwork(){
+        ControlMessage checkServices = new ControlMessage("get", "server", "checkServices");
+        String checkServicesJson = buildJSON(checkServices);
+        if(CurrentHostModeIsCloudServerMode()) {
+            sendRequestWithOkHttp(checkServicesJson);
+        }else{
+            sendRequestWithSocket(checkServicesJson);
+        }
+    }
     /*********************Initialize  start*****************************/
 
-    private void initRecyclerView(){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rooms_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new RoomAdapter(roomList);
-        recyclerView.setAdapter(adapter);
+    private void initUIWidget(){
+        /*Toolbar*/
+        initToolbar();
+        initNavigationView();
 
+        /*Main list*/
+        initRooms();//初始化房间数据
+        initRecyclerView();
 
-        /*Let the RecyclerView supported SwipeRefresh*/
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.rooms_swipe_refresh);
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            @Override
-            public void onRefresh(){
-                refreshRooms();
-            }
-        });
+        initConnectHint();
     }
 
+    private void initConnectHint(){
+        connectHint = (TextView) findViewById(R.id.home_connect_hint);
+        checkServicesWithNetwork();
+    }
 
     private void initToolbar(){
         Toolbar toolBar = (Toolbar) findViewById(R.id.home_toolbar);
@@ -219,6 +224,24 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
+    private void initRecyclerView(){
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rooms_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new RoomAdapter(roomList);
+        recyclerView.setAdapter(adapter);
+
+
+        /*Let the RecyclerView supported SwipeRefresh*/
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.rooms_swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh(){
+                refreshRooms();
+            }
+        });
+    }
 
     private void initNavigationView(){
         userInfo = getCurrentUserInfo();
@@ -379,9 +402,15 @@ public class HomeActivity extends AppCompatActivity {
         Message message = new Message();
         if(!response.equals("")) {
             dataFromNetworkResponse = response;
-            if(response.length() > 40){
+            if(response.length() > 40)
                 message.what = GET_ROOM_LIST_SUCCEED;
-            }else {
+            else if(response.equals("raspServer is ready."))
+                message.what = HOST_CONFIRM;
+            else if(response.equals("raspServer is offline."))
+                message.what = HOST_CONFIRM;
+            else if(response.equals("You need to log in."))
+                message.what = HOST_CONFIRM;
+            else {
                 message.what = CMD_ERROR;
             }
             handler.sendMessage(message);

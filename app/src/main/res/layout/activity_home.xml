@@ -22,6 +22,15 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+            <TextView
+                android:id="@+id/home_connect_hint"
+                android:layout_width="match_parent"
+                android:gravity="center|start"
+                android:layout_height="40dp"
+                android:background="#faa6a6"
+                android:visibility="gone"
+                android:text="  Doesn't connect with server, please check!" />
+
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -38,7 +47,6 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <!--navigationView-->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"

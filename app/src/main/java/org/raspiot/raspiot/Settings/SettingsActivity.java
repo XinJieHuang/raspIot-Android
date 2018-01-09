@@ -237,12 +237,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void currentModeExplain(){
         if(switchServerMode.isChecked()){
-            cloudServerExplain.setText("Cloud server mode: yours or raspiot cloud server,\nBut you need to log in if using raspiot cloud server.");
+            cloudServerExplain.setText("Cloud server mode: yours or raspiot cloud server,\nbut you need to log in if using raspiot cloud server.");
         }else {
             cloudServerExplain.setText("Local area network mode");
         }
     }
-
 
 
     private void updateCurrentServerAddrToDatabase(){
