@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -14,7 +13,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,12 +21,10 @@ import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
 import org.raspiot.raspiot.JsonGlobal.ControlMessage;
 import org.raspiot.raspiot.NetworkGlobal.TCPClient;
 import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
-import org.raspiot.raspiot.Room.RoomActivity;
 import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
-import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.delDevicesFromDatabase;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDevicesInDatabase;

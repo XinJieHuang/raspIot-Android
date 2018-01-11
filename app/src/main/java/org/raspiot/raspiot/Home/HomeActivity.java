@@ -132,7 +132,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 case NETWORK_ERROR:
                     swipeRefresh.setRefreshing(false);
+                    /* Try to check services with server every 5 seconds if connect server error */
                     connectHint.setVisibility(View.VISIBLE);
+                    checkServicesWithNetwork(5000);
                     break;
 
                 default:
@@ -152,12 +154,7 @@ public class HomeActivity extends AppCompatActivity {
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getRoomListWithNetwork();
-                    }
-                });
+                getRoomListWithNetwork();
             }
         }).start();
     }
@@ -173,14 +170,24 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void checkServicesWithNetwork(){
-        ControlMessage checkServices = new ControlMessage("get", "server", "checkServices");
-        String checkServicesJson = buildJSON(checkServices);
-        if(CurrentHostModeIsCloudServerMode()) {
-            sendRequestWithOkHttp(checkServicesJson);
-        }else{
-            sendRequestWithSocket(checkServicesJson);
-        }
+    private void checkServicesWithNetwork(final int timeout){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(timeout);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                ControlMessage checkServices = new ControlMessage("get", "server", "checkServices");
+                String checkServicesJson = buildJSON(checkServices);
+                if(CurrentHostModeIsCloudServerMode()) {
+                    sendRequestWithOkHttp(checkServicesJson);
+                }else{
+                    sendRequestWithSocket(checkServicesJson);
+                }
+            }
+        }).start();
     }
     /*********************Initialize  start*****************************/
 
@@ -198,7 +205,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initConnectHint(){
         connectHint = (TextView) findViewById(R.id.home_connect_hint);
-        checkServicesWithNetwork();
+        checkServicesWithNetwork(100);
     }
 
     private void initToolbar(){
