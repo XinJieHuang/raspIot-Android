@@ -74,7 +74,7 @@ public class RoomActivity extends AppCompatActivity {
     //Toolbar右上角菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.room_toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.room_toolbar_menu, menu);
         return true;
     }
 
@@ -205,8 +205,6 @@ public class RoomActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private void sendRequestWithSocket(String addr, String data){

@@ -5,25 +5,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.raspiot.raspiot.R;
 import org.raspiot.raspiot.DatabaseGlobal.DeviceDB;
 import org.raspiot.raspiot.JsonGlobal.ControlMessage;
 import org.raspiot.raspiot.NetworkGlobal.TCPClient;
 import org.raspiot.raspiot.NetworkGlobal.ThreadCallbackListener;
-import org.raspiot.raspiot.R;
+import org.raspiot.raspiot.Room.RoomActivity;
 import org.raspiot.raspiot.UICommonOperations.DensityUtil;
 
 import java.util.List;
 
+import static org.raspiot.raspiot.Home.RoomDatabaseHandler.deleteRoomFromDatabase;
 import static org.raspiot.raspiot.Home.RoomDatabaseHandler.getRestRoomList;
+import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.delDevicesFromDatabase;
 import static org.raspiot.raspiot.Room.DeviceDatabaseHandler.moveDevicesInDatabase;
 import static org.raspiot.raspiot.Room.RoomActivity.roomName;
 import static org.raspiot.raspiot.DatabaseGlobal.DatabaseCommonOperations.CURRENT_SERVER_ID;
@@ -62,9 +69,10 @@ class DeviceListHandler {
     }
 
 
-    static void showBottomDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
+    static void showBottomDialog(final Context context, final int position, final DeviceAdapter adapter, final View deviceView){
         final Dialog bottomDialog = new Dialog(context, R.style.BottomDialog);
-        View contentView = LayoutInflater.from(context).inflate(R.layout.device_bottom_dialog_content, null);
+        final View contentView = LayoutInflater.from(context).inflate(R.layout.device_bottom_dialog_content, null);
+
         bottomDialog.setContentView(contentView);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
         params.width = context.getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(context, 16f);
@@ -83,25 +91,21 @@ class DeviceListHandler {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                showMoveDeviceDialog(context, position, deviceList, adapter);
+                showMoveDeviceDialog(context, position, adapter);
             }
         });
         rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomDialog.dismiss();
-                showRenameDialog(context, position, deviceList, adapter);
+                showRenameDialog(context, position, adapter);
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 bottomDialog.dismiss();
-                /*if (removeRoom(mRoomList.get(position).getName())) {
-                    deleteRoomFromDatabase(mRoomList.get(position).getName());
-                    mRoomList.remove(position);
-                    notifyItemRemoved(position);
-                }*/
+                showDelDeviceSnackbar(position, adapter, deviceView);
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +117,8 @@ class DeviceListHandler {
         bottomDialog.show();
     }
 
-    private static void showRenameDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
+    private static void showRenameDialog(final Context context, final int position, final DeviceAdapter adapter){
+        final List<Device> deviceList = adapter.getDeviceList();
         AlertDialog.Builder renameDeviceDialog = new AlertDialog.Builder(context);
 
         final String oldName = deviceList.get(position).getGroupItem().getName();
@@ -173,8 +178,9 @@ class DeviceListHandler {
     }
 
 
-    private static void showMoveDeviceDialog(final Context context, final int position, final List<Device> deviceList, final DeviceAdapter adapter){
+    private static void showMoveDeviceDialog(final Context context, final int position, final DeviceAdapter adapter){
         final AlertDialog.Builder moveDeviceDialog = new AlertDialog.Builder(context);
+        final List<Device> deviceList = adapter.getDeviceList();
 
         List<String> roomList = getRestRoomList(roomName);
         if(roomList.isEmpty()){
@@ -201,6 +207,7 @@ class DeviceListHandler {
                                 adapter.notifyItemRemoved(position);
                                 break;
                             case CMD_FAILED:
+                                ToastShowInBottom("Command failed.");
                                 break;
                             default:
                                 break;
@@ -211,6 +218,45 @@ class DeviceListHandler {
             }
         });
         moveDeviceDialog.show();
+    }
+
+    private static void showDelDeviceSnackbar(final int position, final DeviceAdapter adapter, View deviceView){
+        final List<Device> deviceList = adapter.getDeviceList();
+        final String deviceName = deviceList.get(position).getGroupItem().getName();
+        Snackbar.make(deviceView, "Delete " + deviceName, Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        ToastShowInBottom("Cancel deletion");
+                    }
+                }).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                //Add callback: delete device
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
+                    if (event != DISMISS_EVENT_ACTION) {
+                        ControlMessage delDeviceCmd = new ControlMessage("del", "device:" + roomName, deviceName);
+                        String delDeviceJson = buildJSON(delDeviceCmd);
+                        Handler handler = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                switch (msg.what) {
+                                    case CMD_SUCCEED:
+                                        delDevicesFromDatabase(roomName, deviceName);
+                                        deviceList.remove(position);
+                                        adapter.notifyItemRemoved(position);
+                                        break;
+                                    case CMD_FAILED:
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        };
+                        sendCmd(delDeviceJson, handler);
+                    }
+                }
+            }).show();
     }
 
     private static void sendCmd(String data, final Handler handler){

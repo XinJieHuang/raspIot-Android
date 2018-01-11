@@ -158,6 +158,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 }
             });
+
             /* OnLongClickListener */
             groupItemViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -168,7 +169,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         notifyItemRangeRemoved(groupItemViewHolder.getAdapterPosition() + 1, device.getSubItems().size());
                     }
                     int position = groupItemViewHolder.getAdapterPosition();
-                    showBottomDialog(mContext, position, mDeviceList, DeviceAdapter.this);
+                    showBottomDialog(mContext, position, DeviceAdapter.this, v);
                     return true;
                 }
             });
@@ -223,6 +224,10 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private boolean stringToBoolean(String string){
         return string.equals("true");
+    }
+
+    public List<Device> getDeviceList(){
+        return mDeviceList;
     }
 
     @Override
@@ -282,5 +287,4 @@ public class DeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         return itemStatus;
     }
-
 }

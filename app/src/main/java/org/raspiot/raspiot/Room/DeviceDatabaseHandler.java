@@ -126,12 +126,20 @@ public class DeviceDatabaseHandler {
                             .findFirst(RoomDB.class);
         for(String device : devices) {
             DeviceDB deviceDB = DataSupport
-                    .where("name = ? and roomdb_id = ?", device, Integer.toString(oldRoomDB.getId()))
+                    .where("roomdb_id = ? and name = ?", Integer.toString(oldRoomDB.getId()), device)
                     .findFirst(DeviceDB.class, true);
             // 修改外键
             deviceDB.setRoomDB(newRoomDB);
             deviceDB.save();
         }
+    }
+
+    public static void delDevicesFromDatabase(String roomName, String... devices){
+        RoomDB roomDB = DataSupport.select("id")
+                .where("name = ?", roomName)
+                .findFirst(RoomDB.class);
+        for(String device : devices)
+            DataSupport.deleteAll(DeviceDB.class, "roomdb_id = ? and name = ?", Integer.toString(roomDB.getId()), device);
     }
 
     public static List<String> getAllDeviceNameFromDatabase(String roomName){
